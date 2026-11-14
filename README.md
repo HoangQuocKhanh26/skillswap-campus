@@ -197,3 +197,100 @@ flutter test
 - Toàn bộ copy trong app là tiếng Việt; `flutter_localizations` bật locale `vi` cho date/time picker.
 - Dữ liệu chỉ nằm trong bộ nhớ: khởi động lại app sẽ trở về dữ liệu demo ban đầu. Tab *Hồ sơ* có nút **Reset dữ liệu** (hộp thoại “Đặt lại dữ liệu demo?”).
 - Các nút có nhãn *Demo* (ví dụ “Demo: đồng ý”, “Kết thúc”) dùng để trình diễn nhanh các nhánh vòng đời mà không cần chờ thời gian thật.
+
+---
+
+## 9. Phân công nhóm & nghiệm thu
+
+### 9.1. Thành viên và tỉ lệ đóng góp
+
+| Thành viên | Vai trò | Mảng phụ trách chính | Trạng thái | Tỉ lệ đóng góp |
+|---|---|---|---|---:|
+| Hoàng Quốc Khánh | Nhóm trưởng | Kiến trúc, state, matching, lời mời, lịch hẹn, tích hợp, Git/README | Hoàn thành | 40% |
+| Đặng Tuấn Ngọc | Thành viên | Hồ sơ, onboarding, chi tiết, đánh giá, dữ liệu mẫu | Hoàn thành | 35% |
+| Đinh Trung Kiên | Thành viên | Báo cáo Word & PowerPoint thuyết trình | Chờ bàn giao | 15% |
+| Lê Quốc Anh | Thành viên | Khám phá, swipe card | Hoàn thành | 10% |
+| **Tổng** | | | | **100%** |
+
+> Tỉ lệ đóng góp dựa trên khối lượng và độ phức tạp thực tế của từng mảng. Đinh Trung Kiên không phụ trách code; phụ trách tài liệu và thuyết trình.
+
+> Các nhân vật trong dữ liệu mẫu (Ngọc Anh, Minh Thư, Phương Thảo…) là hồ sơ giả lập phục vụ demo, không phải thành viên nhóm.
+
+### 9.2. Chi tiết công việc
+
+#### Hoàng Quốc Khánh — Nhóm trưởng — 40%
+
+- **Phụ trách:** phân tích yêu cầu, chốt phạm vi; thiết kế kiến trúc và state machine; matching; màn lời mời; màn lịch hẹn và form đặt lịch; tích hợp toàn bộ sản phẩm; quản lý Git/GitHub; viết README và kịch bản demo.
+- **Đầu việc:** mô hình `Skill`/`User`/`SwapRequest`/`SwapSession`/`Review`; `AppState` + `AppScope`; matching hai chiều; vòng đời accept/reject/expire/reschedule/cancel/complete/review; 3 tab *Nhận được / Đã gửi / Lịch sử*; màn *Lịch hẹn* (2 tab); form đặt lịch (ngày, giờ, thời lượng, hình thức, địa điểm, ghi chú); validate quá khứ 15 phút và trùng lịch; `HomeShell` + timer hết hạn; widget điểm phù hợp; hộp thoại dùng chung; review chéo và sửa lỗi cuối.
+- **File chính:** `lib/models/*`, `lib/state/*`, `lib/services/matching_service.dart`, `lib/screens/home_shell.dart`, `requests_screen.dart`, `schedule_screen.dart`, `schedule_session_screen.dart`, `lib/widgets/status_badge.dart`, `match_score_ring.dart`, `match_timeline.dart`, `match_detail_sheet.dart`, `lib/utils/actions.dart`, `lib/app.dart`, `README.md`, `test/app_state_test.dart`, `test/matching_service_test.dart`.
+- **Nghiệm thu:** 7 trạng thái lời mời hoạt động đúng; 3 tab lời mời; cảnh báo trùng giờ; `flutter analyze` sạch; 14 test pass; demo đủ 6 nhánh; repo public có hướng dẫn chạy.
+
+#### Đặng Tuấn Ngọc — 35%
+
+- **Phụ trách:** luồng hồ sơ, onboarding, chi tiết hồ sơ, đánh giá và dữ liệu mẫu.
+- **Đầu việc:** đăng nhập demo; tạo hồ sơ 3 bước (thông tin → kỹ năng dạy → kỹ năng học); validate và nút *Dùng mẫu*; hồ sơ cá nhân, thống kê, đánh giá nhận được; chỉnh sửa hồ sơ; multi-select chips; avatar; 18 hồ sơ + 19 ảnh đại diện; trang chi tiết hồ sơ (header gradient, `TabBar` kỹ năng/đánh giá, sheet gửi lời mời); `RatingBar`; sheet đánh giá hai chiều.
+- **File chính:** `lib/screens/login_screen.dart`, `profile_setup_screen.dart`, `profile_screen.dart`, `edit_profile_screen.dart`, `user_detail_screen.dart`, `lib/widgets/skill_picker_sheet.dart`, `skill_chip.dart`, `user_avatar.dart`, `rating_bar.dart`, `review_sheet.dart`, `lib/services/sample_data.dart`, `assets/avatars/`.
+- **Nghiệm thu:** tạo hồ sơ mới và *Dùng mẫu* đúng nhân vật Minh Thư; chọn/bỏ chọn nhiều kỹ năng; sửa hồ sơ; chi tiết có 2 tab; chấm 1–5 sao, chọn nhãn, gửi nhận xét; hiển thị đánh giá của cả hai bên; đủ 18 hồ sơ.
+
+#### Đinh Trung Kiên — 15%
+
+- **Phụ trách:** báo cáo Word và PowerPoint thuyết trình; không phụ trách code.
+- **Đầu việc:** tổng hợp nội dung từ README và kết quả demo; viết báo cáo đủ mục 1–9; chụp ảnh minh họa các màn hình; làm slide 10–12 trang; soạn kịch bản thuyết trình 3–5 phút; rà soát chính tả, định dạng và thống nhất số liệu với nhóm.
+- **File bàn giao:** báo cáo Word + slide PowerPoint (file nộp kèm).
+- **Nghiệm thu:** báo cáo đủ mục, có ảnh minh họa; slide bám đúng kịch bản demo; thuyết trình đúng thời lượng; số liệu khớp với app.
+
+#### Lê Quốc Anh — 10%
+
+- **Phụ trách:** khám phá và swipe card.
+- **Đầu việc:** tìm kiếm/lọc/sắp xếp; bộ thẻ swipe `Dismissible` (trái bỏ qua, phải gửi lời mời); giao diện thẻ ứng viên; trạng thái rỗng khi hết người phù hợp; callback mở chi tiết hồ sơ (phối hợp với Đặng Tuấn Ngọc).
+- **File chính:** `lib/screens/discover_screen.dart`, `lib/widgets/swap_candidate_card.dart`, `lib/widgets/empty_state.dart`.
+- **Nghiệm thu:** tìm kiếm/lọc đúng; swipe hai hướng; không lỗi key khi thẻ đổi; mở được chi tiết; có trạng thái rỗng.
+
+### 9.3. Tiêu chí nghiệm thu chung
+
+- [x] `flutter analyze` không có issue.
+- [x] `flutter test` pass 14/14.
+- [x] Chạy được bằng `flutter run -d chrome` và `flutter run -d web-server`.
+- [x] Demo đủ 6 nhánh: từ chối, hết hạn, đổi lịch, huỷ, hoàn thành, đánh giá hai chiều.
+- [x] Repo public, không commit `build/`, `.dart_tool/`, `.idea/`.
+- [x] README có phạm vi, tính năng, widget đặc trưng, kịch bản demo, cách chạy và kiểm thử.
+
+### 9.4. Kết quả nghiệm thu
+
+| Mảng | Người thực hiện | Người nghiệm thu | Kết quả |
+|---|---|---|---|
+| Kiến trúc, matching, lời mời & lịch hẹn | Hoàng Quốc Khánh | Tập thể nhóm | Đạt |
+| Hồ sơ, chi tiết & đánh giá | Đặng Tuấn Ngọc | Hoàng Quốc Khánh | Đạt |
+| Báo cáo Word & PowerPoint | Đinh Trung Kiên | Hoàng Quốc Khánh | Chờ bàn giao |
+| Khám phá & swipe card | Lê Quốc Anh | Hoàng Quốc Khánh | Đạt |
+
+> Nhóm trưởng nghiệm thu ngày 14/11/2026. Các thành viên đối chiếu chéo phần của nhau trước khi merge.
+
+### 9.5. Kiểm thử & QA
+
+**Phân công kiểm thử**
+
+| Thành viên | Vai trò QA | Nội dung chính |
+|---|---|---|
+| Hoàng Quốc Khánh | Chủ trì | Chạy `flutter analyze` + `flutter test`; test vòng đời, matching, đặt/đổi/huỷ lịch; regression trước khi push |
+| Đặng Tuấn Ngọc | Test chéo | Onboarding, hồ sơ, sửa kỹ năng, đánh giá; thử text scale và màn hình nhỏ |
+| Lê Quốc Anh | Test chéo | Khám phá: tìm kiếm, lọc, swipe hai hướng, lỗi key, trạng thái rỗng |
+| Đinh Trung Kiên | Đối chiếu tài liệu | Chạy kịch bản demo để kiểm tra ảnh minh họa, số liệu và nội dung Word/PowerPoint |
+
+**Đã kiểm tra**
+
+- [x] `flutter analyze`: không issue.
+- [x] `flutter test`: 14/14 pass.
+- [x] Sáu nhánh vòng đời: từ chối, hết hạn, đổi lịch, huỷ, hoàn thành, đánh giá hai chiều.
+- [x] Đặt lịch quá khứ và trùng giờ bị chặn.
+- [x] Swipe hai hướng, tìm kiếm/lọc, mở chi tiết, gửi đánh giá.
+- [x] Chạy trên Chrome desktop, không có lỗi console.
+
+**Cần kiểm tra trước khi nộp**
+
+- [ ] Chạy trên Android/iOS thật.
+- [ ] Màn hình 360×800 và text scale 2.0.
+- [ ] Timer hết hạn khi app xuống background rồi quay lại.
+- [ ] Đối chiếu số liệu Word/PowerPoint với app.
+
+> Nguyên tắc: người viết code không tự test một mình; mỗi màn hình phải được một thành viên khác test chéo.
