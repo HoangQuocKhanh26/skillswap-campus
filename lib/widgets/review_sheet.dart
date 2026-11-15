@@ -7,6 +7,7 @@ import '../utils/formatters.dart';
 import '../widgets/rating_bar.dart';
 import '../widgets/skill_chip.dart';
 import '../widgets/user_avatar.dart';
+import '../l10n/app_text.dart';
 
 class ReviewSheet extends StatefulWidget {
   final SwapRequest request;
@@ -82,8 +83,8 @@ class _ReviewSheetState extends State<ReviewSheet> {
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Đánh giá buổi học',
+                            Text(
+                              tr('Đánh giá buổi học'),
                               style: TextStyle(
                                 fontSize: 17,
                                 fontWeight: FontWeight.w800,
@@ -91,9 +92,9 @@ class _ReviewSheetState extends State<ReviewSheet> {
                               ),
                             ),
                             Text(
-                              'Với ${partner.name}'
+                              '${trArgs('Với {name}', {'name': partner.name})}'
                               '${session != null ? ' · ${formatShortDate(session.startTime)}' : ''}',
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11.5,
                                 color: AppColors.muted,
                               ),
@@ -110,8 +111,8 @@ class _ReviewSheetState extends State<ReviewSheet> {
                           color: AppColors.success.withValues(alpha: 0.1),
                           borderRadius: BorderRadius.circular(999),
                         ),
-                        child: const Text(
-                          '2 chiều',
+                        child: Text(
+                          tr('2 chiều'),
                           style: TextStyle(
                             fontSize: 10,
                             fontWeight: FontWeight.w700,
@@ -142,8 +143,8 @@ class _ReviewSheetState extends State<ReviewSheet> {
                     ),
                   ),
                   const SizedBox(height: 16),
-                  const Text(
-                    'Điều gì làm buổi học tốt?',
+                  Text(
+                    tr('Điều gì làm buổi học tốt?'),
                     style: TextStyle(
                       fontSize: 12.5,
                       fontWeight: FontWeight.w800,
@@ -158,7 +159,7 @@ class _ReviewSheetState extends State<ReviewSheet> {
                       final selected = _tags.contains(tag);
                       return FilterChip(
                         selected: selected,
-                        label: Text(tag),
+                        label: Text(tr(tag)),
                         showCheckmark: false,
                         selectedColor: AppColors.primary,
                         labelStyle: TextStyle(
@@ -184,9 +185,9 @@ class _ReviewSheetState extends State<ReviewSheet> {
                     maxLines: 3,
                     maxLength: 200,
                     textCapitalization: TextCapitalization.sentences,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       hintText:
-                          'Chia sẻ cụ thể điều bạn thích hoặc cần cải thiện...',
+                          tr('Chia sẻ cụ thể điều bạn thích hoặc cần cải thiện...'),
                       alignLabelWithHint: true,
                     ),
                   ),
@@ -197,7 +198,7 @@ class _ReviewSheetState extends State<ReviewSheet> {
                       color: AppColors.primarySoft.withValues(alpha: 0.7),
                       borderRadius: BorderRadius.circular(14),
                     ),
-                    child: const Row(
+                    child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Icon(
@@ -208,8 +209,8 @@ class _ReviewSheetState extends State<ReviewSheet> {
                         SizedBox(width: 7),
                         Expanded(
                           child: Text(
-                            'Đánh giá hai chiều: sau khi gửi, bạn cũng sẽ nhận được '
-                            'đánh giá từ đối phương.',
+                            tr('Đánh giá hai chiều: sau khi gửi, bạn cũng sẽ nhận được '
+                            'đánh giá từ đối phương.'),
                             style: TextStyle(
                               fontSize: 11,
                               height: 1.45,
@@ -224,7 +225,7 @@ class _ReviewSheetState extends State<ReviewSheet> {
                   FilledButton.icon(
                     onPressed: _submit,
                     icon: const Icon(Icons.star_rounded, size: 19),
-                    label: const Text('Gửi đánh giá'),
+                    label: Text(tr('Gửi đánh giá')),
                   ),
                 ],
               ),
@@ -258,15 +259,15 @@ class _SuccessView extends StatelessWidget {
             color: AppColors.success.withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
-          child: const Icon(
+          child: Icon(
             Icons.check_rounded,
             size: 38,
             color: AppColors.success,
           ),
         ),
         const SizedBox(height: 14),
-        const Text(
-          'Cảm ơn bạn đã đánh giá!',
+        Text(
+          tr('Cảm ơn bạn đã đánh giá!'),
           style: TextStyle(
             fontSize: 19,
             fontWeight: FontWeight.w800,
@@ -275,9 +276,12 @@ class _SuccessView extends StatelessWidget {
         ),
         const SizedBox(height: 6),
         Text(
-          'Bạn đã chấm $rating/5 sao cho $partnerName.',
+          trArgs(
+            'Bạn đã chấm {rating}/5 sao cho {name}.',
+            {'rating': '$rating', 'name': partnerName},
+          ),
           textAlign: TextAlign.center,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12.5,
             color: AppColors.muted,
           ),
@@ -298,8 +302,11 @@ class _SuccessView extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      '$partnerName đã đánh giá bạn',
-                      style: const TextStyle(
+                      trArgs(
+                        '{name} đã đánh giá bạn',
+                        {'name': partnerName},
+                      ),
+                      style: TextStyle(
                         fontSize: 12,
                         fontWeight: FontWeight.w800,
                         color: AppColors.ink,
@@ -317,7 +324,7 @@ class _SuccessView extends StatelessWidget {
                   const SizedBox(height: 5),
                   Text(
                     '“${partnerReview!.comment}”',
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 11.5,
                       height: 1.5,
                       color: AppColors.muted,
@@ -332,7 +339,7 @@ class _SuccessView extends StatelessWidget {
                     children: partnerReview!.tags
                         .map(
                           (tag) => SkillChip.fromString(
-                            tag,
+                            tr(tag),
                             tone: SkillTone.highlight,
                             compact: true,
                           ),

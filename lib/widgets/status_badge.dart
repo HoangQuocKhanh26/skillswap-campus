@@ -106,22 +106,23 @@ class SoftBadge extends StatelessWidget {
 
 class CountBadge extends StatelessWidget {
   final int count;
-  final Color color;
+  final Color? color;
 
   const CountBadge({
     super.key,
     required this.count,
-    this.color = AppColors.primary,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
     if (count <= 0) return const SizedBox.shrink();
+    final tone = color ?? AppColors.primary;
     return Container(
       constraints: const BoxConstraints(minWidth: 18, minHeight: 18),
       padding: const EdgeInsets.symmetric(horizontal: 5),
       decoration: BoxDecoration(
-        color: color,
+        color: tone,
         borderRadius: BorderRadius.circular(999),
       ),
       alignment: Alignment.center,

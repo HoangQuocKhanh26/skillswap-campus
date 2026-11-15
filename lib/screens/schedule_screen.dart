@@ -12,6 +12,7 @@ import '../widgets/rating_bar.dart';
 import '../widgets/skill_chip.dart';
 import '../widgets/status_badge.dart';
 import '../widgets/user_avatar.dart';
+import '../l10n/app_text.dart';
 
 class ScheduleScreen extends StatelessWidget {
   const ScheduleScreen({super.key});
@@ -27,14 +28,17 @@ class ScheduleScreen extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Lịch hẹn'),
+          title: Text(tr('Lịch hẹn')),
           actions: [
             if (needsReview > 0)
               Padding(
                 padding: const EdgeInsets.only(right: 16),
                 child: Center(
                   child: SoftBadge(
-                    label: '$needsReview chờ đánh giá',
+                    label: trArgs(
+                      '{count} chờ đánh giá',
+                      {'count': '$needsReview'},
+                    ),
                     color: AppColors.accent,
                     icon: Icons.star_rounded,
                   ),
@@ -44,12 +48,14 @@ class ScheduleScreen extends StatelessWidget {
           bottom: TabBar(
             tabs: [
               Tab(
-                text:
-                    'Sắp tới${upcoming.isEmpty ? '' : ' (${upcoming.length})'}',
+                text: upcoming.isEmpty
+                    ? tr('Sắp tới')
+                    : '${tr('Sắp tới')} (${upcoming.length})',
               ),
               Tab(
-                text:
-                    'Đã xong${completed.isEmpty ? '' : ' (${completed.length})'}',
+                text: completed.isEmpty
+                    ? tr('Đã xong')
+                    : '${tr('Đã xong')} (${completed.length})',
               ),
             ],
           ),
@@ -74,12 +80,12 @@ class _UpcomingTab extends StatelessWidget {
   Widget build(BuildContext context) {
     final state = AppScope.of(context);
     if (entries.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.event_note_rounded,
-        title: 'Chưa có buổi học nào',
+        title: tr('Chưa có buổi học nào'),
         message:
-            'Khi lời mời được chấp nhận, bạn có thể chọn thời gian, địa điểm '
-            'và buổi học sẽ xuất hiện trong lịch.',
+            tr('Khi lời mời được chấp nhận, bạn có thể chọn thời gian, địa điểm '
+            'và buổi học sẽ xuất hiện trong lịch.'),
         color: AppColors.primary,
       );
     }
@@ -97,7 +103,7 @@ class _UpcomingTab extends StatelessWidget {
               children: [
                 Text(
                   day,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w800,
                     color: AppColors.ink,
@@ -106,7 +112,7 @@ class _UpcomingTab extends StatelessWidget {
                 const SizedBox(width: 6),
                 Text(
                   formatDate(entry.session.startTime),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10.5,
                     color: AppColors.muted,
                   ),
@@ -148,7 +154,7 @@ class _SummaryBanner extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        gradient: const LinearGradient(
+        gradient: LinearGradient(
           colors: [AppColors.primary, Color(0xFF7C3AED)],
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
@@ -176,7 +182,10 @@ class _SummaryBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Bạn có $count buổi trao đổi sắp tới',
+                  trArgs(
+                    'Bạn có {count} buổi trao đổi sắp tới',
+                    {'count': '$count'},
+                  ),
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 13.5,
@@ -185,7 +194,7 @@ class _SummaryBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  'Đổi lịch hoặc huỷ trước ít nhất 2 giờ để giữ điểm uy tín nhé.',
+                  tr('Đổi lịch hoặc huỷ trước ít nhất 2 giờ để giữ điểm uy tín nhé.'),
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.75),
                     fontSize: 10,
@@ -240,7 +249,7 @@ class _UpcomingCard extends StatelessWidget {
                       children: [
                         Text(
                           '${session.startTime.day}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 21,
                             fontWeight: FontWeight.w800,
                             height: 1,
@@ -249,8 +258,11 @@ class _UpcomingCard extends StatelessWidget {
                         ),
                         const SizedBox(height: 2),
                         Text(
-                          'Tháng ${session.startTime.month}',
-                          style: const TextStyle(
+                          trArgs(
+                            'Tháng {month}',
+                            {'month': '${session.startTime.month}'},
+                          ),
+                          style: TextStyle(
                             fontSize: 8.5,
                             fontWeight: FontWeight.w700,
                             color: AppColors.primary,
@@ -271,7 +283,7 @@ class _UpcomingCard extends StatelessWidget {
                                 partner.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 14.5,
                                   fontWeight: FontWeight.w800,
                                   color: AppColors.ink,
@@ -292,7 +304,7 @@ class _UpcomingCard extends StatelessWidget {
                             session.startTime,
                             session.durationMinutes,
                           ),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: AppColors.primary,
@@ -314,7 +326,7 @@ class _UpcomingCard extends StatelessWidget {
                                 session.location,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 10.5,
                                   color: AppColors.muted,
                                 ),
@@ -338,7 +350,10 @@ class _UpcomingCard extends StatelessWidget {
                       if (session.rescheduleCount > 0) ...[
                         const SizedBox(height: 4),
                         SoftBadge(
-                          label: 'Đã đổi ${session.rescheduleCount} lần',
+                          label: trArgs(
+                            'Đã đổi {count} lần',
+                            {'count': '${session.rescheduleCount}'},
+                          ),
                           color: AppColors.slate,
                           compact: true,
                           icon: Icons.update_rounded,
@@ -358,10 +373,13 @@ class _UpcomingCard extends StatelessWidget {
                     borderRadius: BorderRadius.circular(10),
                   ),
                   child: Text(
-                    'Ghi chú: ${session.note}',
+                    trArgs(
+                      'Ghi chú: {note}',
+                      {'note': session.note},
+                    ),
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 10.5,
                       height: 1.4,
                       color: AppColors.muted,
@@ -378,8 +396,8 @@ class _UpcomingCard extends StatelessWidget {
                       foregroundColor: AppColors.muted,
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                     ),
-                    child: const Text(
-                      'Huỷ',
+                    child: Text(
+                      tr('Huỷ'),
                       style: TextStyle(fontSize: 11.5),
                     ),
                   ),
@@ -391,8 +409,8 @@ class _UpcomingCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 11),
                     ),
                     icon: const Icon(Icons.update_rounded, size: 14),
-                    label: const Text(
-                      'Đổi lịch',
+                    label: Text(
+                      tr('Đổi lịch'),
                       style: TextStyle(fontSize: 11.5),
                     ),
                   ),
@@ -404,8 +422,8 @@ class _UpcomingCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 11),
                     ),
                     icon: const Icon(Icons.check_rounded, size: 15),
-                    label: const Text(
-                      'Kết thúc',
+                    label: Text(
+                      tr('Kết thúc'),
                       style: TextStyle(fontSize: 11.5),
                     ),
                   ),
@@ -427,11 +445,11 @@ class _CompletedTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (entries.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.task_alt_rounded,
-        title: 'Chưa có buổi học hoàn thành',
+        title: tr('Chưa có buổi học hoàn thành'),
         message:
-            'Sau khi buổi học kết thúc, bạn và đối phương có thể gửi đánh giá hai chiều tại đây.',
+            tr('Sau khi buổi học kết thúc, bạn và đối phương có thể gửi đánh giá hai chiều tại đây.'),
         color: AppColors.success,
       );
     }
@@ -487,7 +505,7 @@ class _CompletedCard extends StatelessWidget {
                           partner.name,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 14,
                             fontWeight: FontWeight.w800,
                             color: AppColors.ink,
@@ -497,7 +515,7 @@ class _CompletedCard extends StatelessWidget {
                         Text(
                           '${friendlyDay(entry.session.startTime, state.now)} · '
                           '${formatTimeRange(entry.session.startTime, entry.session.durationMinutes)}',
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10.5,
                             color: AppColors.muted,
                           ),
@@ -524,9 +542,9 @@ class _CompletedCard extends StatelessWidget {
                         color: Color(0xFFB45309),
                       ),
                       const SizedBox(width: 7),
-                      const Expanded(
+                      Expanded(
                         child: Text(
-                          'Buổi học đã kết thúc · Chờ bạn đánh giá',
+                          tr('Buổi học đã kết thúc · Chờ bạn đánh giá'),
                           style: TextStyle(
                             fontSize: 11,
                             fontWeight: FontWeight.w700,
@@ -546,21 +564,21 @@ class _CompletedCard extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                           ),
                         ),
-                        child: const Text('Đánh giá'),
+                        child: Text(tr('Đánh giá')),
                       ),
                     ],
                   ),
                 )
               else ...[
                 _ReviewLine(
-                  label: 'Bạn đánh giá',
+                  label: tr('Bạn đánh giá'),
                   rating: myReview?.rating,
                   comment: myReview?.comment,
                   color: AppColors.secondary,
                 ),
                 const SizedBox(height: 6),
                 _ReviewLine(
-                  label: '${partner.name} đánh giá bạn',
+                  label: trArgs('{name} đánh giá bạn', {'name': partner.name}),
                   rating: partnerReview?.rating,
                   comment: partnerReview?.comment,
                   color: AppColors.primary,
@@ -574,14 +592,14 @@ class _CompletedCard extends StatelessWidget {
                     children: [
                       ...?myReview?.tags.map(
                         (tag) => SkillChip.fromString(
-                          tag,
+                          tr(tag),
                           tone: SkillTone.teaching,
                           compact: true,
                         ),
                       ),
                       ...?partnerReview?.tags.map(
                         (tag) => SkillChip.fromString(
-                          tag,
+                          tr(tag),
                           tone: SkillTone.learning,
                           compact: true,
                         ),
@@ -593,7 +611,7 @@ class _CompletedCard extends StatelessWidget {
               if (needsReview && partnerReview != null) ...[
                 const SizedBox(height: 10),
                 _ReviewLine(
-                  label: '${partner.name} đánh giá bạn',
+                  label: trArgs('{name} đánh giá bạn', {'name': partner.name}),
                   rating: partnerReview.rating,
                   comment: partnerReview.comment,
                   color: AppColors.primary,
@@ -606,7 +624,7 @@ class _CompletedCard extends StatelessWidget {
                     children: partnerReview.tags
                         .map(
                           (tag) => SkillChip.fromString(
-                            tag,
+                            tr(tag),
                             tone: SkillTone.learning,
                             compact: true,
                           ),
@@ -620,14 +638,14 @@ class _CompletedCard extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
                   Text(
-                    'Xem chi tiết',
+                    tr('Xem chi tiết'),
                     style: TextStyle(
                       fontSize: 10.5,
                       fontWeight: FontWeight.w700,
                       color: AppColors.primary.withValues(alpha: 0.9),
                     ),
                   ),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right_rounded,
                     size: 15,
                     color: AppColors.primary,
@@ -674,8 +692,8 @@ class _ReviewLine extends StatelessWidget {
           ),
         ),
         if (rating == null)
-          const Text(
-            'Chưa đánh giá',
+          Text(
+            tr('Chưa đánh giá'),
             style: TextStyle(
               fontSize: 10.5,
               fontStyle: FontStyle.italic,
@@ -694,7 +712,7 @@ class _ReviewLine extends StatelessWidget {
               comment ?? '',
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 10.5,
                 color: AppColors.muted,
               ),

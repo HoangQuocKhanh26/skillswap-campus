@@ -7,6 +7,7 @@ import '../theme/app_theme.dart';
 import '../widgets/skill_chip.dart';
 import '../widgets/skill_picker_sheet.dart';
 import '../widgets/user_avatar.dart';
+import '../l10n/app_text.dart';
 
 class EditProfileScreen extends StatefulWidget {
   const EditProfileScreen({super.key});
@@ -47,10 +48,10 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Future<void> _editSkills({required bool teaching}) async {
     final result = await SkillPickerSheet.show(
       context,
-      title: teaching ? 'Kỹ năng có thể dạy' : 'Kỹ năng muốn học',
+      title: teaching ? tr('Kỹ năng có thể dạy') : tr('Kỹ năng muốn học'),
       subtitle: teaching
-          ? 'Chọn những gì bạn tự tin chia sẻ'
-          : 'Chọn những gì bạn muốn trao đổi',
+          ? tr('Chọn những gì bạn tự tin chia sẻ')
+          : tr('Chọn những gì bạn muốn trao đổi'),
       initial: teaching ? _teaching : _learning,
       tone: teaching ? AppColors.secondary : AppColors.primary,
     );
@@ -69,19 +70,19 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     final major = _majorController.text.trim();
 
     if (name.isEmpty) {
-      _showError('Họ và tên không được để trống.');
+      _showError(tr('Họ và tên không được để trống.'));
       return;
     }
     if (major.isEmpty) {
-      _showError('Vui lòng nhập ngành học.');
+      _showError(tr('Vui lòng nhập ngành học.'));
       return;
     }
     if (_teaching.isEmpty) {
-      _showError('Hãy chọn ít nhất một kỹ năng có thể dạy.');
+      _showError(tr('Hãy chọn ít nhất một kỹ năng có thể dạy.'));
       return;
     }
     if (_learning.isEmpty) {
-      _showError('Hãy chọn ít nhất một kỹ năng muốn học.');
+      _showError(tr('Hãy chọn ít nhất một kỹ năng muốn học.'));
       return;
     }
 
@@ -97,7 +98,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
     AppScope.read(context).updateCurrentUser(updated);
     Navigator.of(context).pop();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Đã cập nhật hồ sơ của bạn.')),
+      SnackBar(content: Text(tr('Đã cập nhật hồ sơ của bạn.'))),
     );
   }
 
@@ -111,11 +112,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Chỉnh sửa hồ sơ'),
+        title: Text(tr('Chỉnh sửa hồ sơ')),
         actions: [
           TextButton(
             onPressed: _save,
-            child: const Text('Lưu'),
+            child: Text(tr('Lưu')),
           ),
           const SizedBox(width: 8),
         ],
@@ -134,11 +135,11 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                 ),
                 TextButton.icon(
                   onPressed: () => _showError(
-                    'Ảnh đại diện được tạo tự động từ tên trong bản demo.',
+                    tr('Ảnh đại diện được tạo tự động từ tên trong bản demo.'),
                   ),
                   icon: const Icon(Icons.face_rounded, size: 15),
-                  label: const Text(
-                    'Ảnh đại diện tự động',
+                  label: Text(
+                    tr('Ảnh đại diện tự động'),
                     style: TextStyle(fontSize: 11),
                   ),
                 ),
@@ -147,15 +148,15 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           const SizedBox(height: 8),
           _Section(
-            title: 'Thông tin cá nhân',
+            title: tr('Thông tin cá nhân'),
             icon: Icons.person_outline_rounded,
             child: Column(
               children: [
                 TextField(
                   controller: _nameController,
                   textCapitalization: TextCapitalization.words,
-                  decoration: const InputDecoration(
-                    labelText: 'Họ và tên',
+                  decoration: InputDecoration(
+                    labelText: tr('Họ và tên'),
                     prefixIcon: Icon(Icons.badge_outlined),
                   ),
                 ),
@@ -168,8 +169,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       child: TextField(
                         controller: _majorController,
                         textCapitalization: TextCapitalization.words,
-                        decoration: const InputDecoration(
-                          labelText: 'Ngành học',
+                        decoration: InputDecoration(
+                          labelText: tr('Ngành học'),
                           prefixIcon: Icon(Icons.school_outlined),
                         ),
                       ),
@@ -179,8 +180,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                       flex: 2,
                       child: DropdownButtonFormField<String>(
                         initialValue: _year,
-                        decoration: const InputDecoration(
-                          labelText: 'Khoá',
+                        decoration: InputDecoration(
+                          labelText: tr('Khoá'),
                           contentPadding: EdgeInsets.symmetric(
                             horizontal: 12,
                             vertical: 15,
@@ -207,8 +208,8 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                   maxLines: 4,
                   maxLength: 240,
                   textCapitalization: TextCapitalization.sentences,
-                  decoration: const InputDecoration(
-                    labelText: 'Giới thiệu bản thân',
+                  decoration: InputDecoration(
+                    labelText: tr('Giới thiệu bản thân'),
                     alignLabelWithHint: true,
                   ),
                 ),
@@ -217,7 +218,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           const SizedBox(height: 12),
           _SkillSection(
-            title: 'Kỹ năng có thể dạy',
+            title: tr('Kỹ năng có thể dạy'),
             icon: Icons.school_rounded,
             tone: AppColors.secondary,
             skills: _teaching,
@@ -226,7 +227,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           ),
           const SizedBox(height: 12),
           _SkillSection(
-            title: 'Kỹ năng muốn học',
+            title: tr('Kỹ năng muốn học'),
             icon: Icons.menu_book_rounded,
             tone: AppColors.primary,
             skills: _learning,
@@ -237,7 +238,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
           FilledButton.icon(
             onPressed: _save,
             icon: const Icon(Icons.save_rounded, size: 18),
-            label: const Text('Lưu thay đổi'),
+            label: Text(tr('Lưu thay đổi')),
           ),
         ],
       ),
@@ -274,7 +275,7 @@ class _Section extends StatelessWidget {
               const SizedBox(width: 7),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13.5,
                   fontWeight: FontWeight.w800,
                   color: AppColors.ink,
@@ -326,7 +327,7 @@ class _SkillSection extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 13.5,
                     fontWeight: FontWeight.w800,
                     color: AppColors.ink,
@@ -341,8 +342,8 @@ class _SkillSection extends StatelessWidget {
                   minimumSize: const Size(0, 32),
                 ),
                 icon: const Icon(Icons.add_rounded, size: 15),
-                label: const Text(
-                  'Chọn',
+                label: Text(
+                  tr('Chọn'),
                   style: TextStyle(fontSize: 11.5),
                 ),
               ),
@@ -351,7 +352,7 @@ class _SkillSection extends StatelessWidget {
           const SizedBox(height: 8),
           if (skills.isEmpty)
             Text(
-              'Chưa có kỹ năng nào. Bấm “Chọn” để thêm.',
+              tr('Chưa có kỹ năng nào. Bấm “Chọn” để thêm.'),
               style: TextStyle(
                 fontSize: 11,
                 fontStyle: FontStyle.italic,

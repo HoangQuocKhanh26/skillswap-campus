@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../models/swap_request.dart';
 import '../theme/app_theme.dart';
 import '../utils/formatters.dart';
+import '../l10n/app_text.dart';
 
 enum _StepState { done, current, future, failed }
 
@@ -40,7 +41,7 @@ class MatchTimeline extends StatelessWidget {
     final steps = <_TimelineStep>[];
 
     steps.add(_TimelineStep(
-      title: 'Gửi lời mời',
+      title: tr('Gửi lời mời'),
       subtitle: '${timeAgo(request.createdAt, now)} · '
           '${request.isSender(currentUserId) ? 'Bạn đã gửi' : 'Đối phương đã gửi'}',
       state: _StepState.done,
@@ -50,28 +51,32 @@ class MatchTimeline extends StatelessWidget {
     switch (status) {
       case SwapStatus.pending:
         steps.add(_TimelineStep(
-          title: 'Chờ phản hồi',
-          subtitle:
-              '${timeLeft(request.expiresAt, now)} · hết hạn sau 48 giờ',
+          title: tr('Chờ phản hồi'),
+          subtitle: trArgs(
+            '{time} · hết hạn sau 48 giờ',
+            {'time': timeLeft(request.expiresAt, now)},
+          ),
           state: _StepState.current,
           icon: Icons.hourglass_top_rounded,
         ));
         break;
       case SwapStatus.rejected:
         steps.add(_TimelineStep(
-          title: 'Đã từ chối',
+          title: tr('Đã từ chối'),
           subtitle: request.respondedAt != null
               ? timeAgo(request.respondedAt!, now)
-              : 'Lời mời không được chấp nhận',
+              : tr('Lời mời không được chấp nhận'),
           state: _StepState.failed,
           icon: Icons.close_rounded,
         ));
         break;
       case SwapStatus.expired:
         steps.add(_TimelineStep(
-          title: 'Hết hạn phản hồi',
-          subtitle:
-              'Lời mời hết hạn ${timeAgo(request.expiresAt, now)}',
+          title: tr('Hết hạn phản hồi'),
+          subtitle: trArgs(
+            'Lời mời hết hạn {time}',
+            {'time': timeAgo(request.expiresAt, now)},
+          ),
           state: _StepState.failed,
           icon: Icons.timer_off_rounded,
         ));
@@ -81,10 +86,10 @@ class MatchTimeline extends StatelessWidget {
       case SwapStatus.completed:
       case SwapStatus.cancelled:
         steps.add(_TimelineStep(
-          title: 'Chấp nhận ghép đôi',
+          title: tr('Chấp nhận ghép đôi'),
           subtitle: request.respondedAt != null
               ? timeAgo(request.respondedAt!, now)
-              : 'Đã chấp nhận',
+              : tr('Đã chấp nhận'),
           state: _StepState.done,
           icon: Icons.handshake_rounded,
         ));
@@ -93,10 +98,10 @@ class MatchTimeline extends StatelessWidget {
 
     if (status == SwapStatus.cancelled) {
       steps.add(_TimelineStep(
-        title: 'Đã huỷ',
+        title: tr('Đã huỷ'),
         subtitle: request.cancelReason?.isNotEmpty == true
             ? request.cancelReason!
-            : 'Buổi trao đổi đã bị huỷ',
+            : tr('Buổi trao đổi đã bị huỷ'),
         state: _StepState.failed,
         icon: Icons.block_rounded,
       ));
@@ -109,10 +114,10 @@ class MatchTimeline extends StatelessWidget {
 
     if (session == null) {
       steps.add(_TimelineStep(
-        title: 'Chọn lịch học',
+        title: tr('Chọn lịch học'),
         subtitle: status == SwapStatus.accepted
-            ? 'Hai bạn chưa chọn thời gian'
-            : 'Chưa đặt lịch',
+            ? tr('Hai bạn chưa chọn thời gian')
+            : tr('Chưa đặt lịch'),
         state: status == SwapStatus.accepted
             ? _StepState.current
             : _StepState.future,
@@ -120,7 +125,7 @@ class MatchTimeline extends StatelessWidget {
       ));
     } else {
       steps.add(_TimelineStep(
-        title: 'Đặt lịch học',
+        title: tr('Đặt lịch học'),
         subtitle: '${friendlyDay(session.startTime, now)} · '
             '${formatTimeRange(session.startTime, session.durationMinutes)}',
         state: session.status == SessionStatus.scheduled
@@ -134,17 +139,17 @@ class MatchTimeline extends StatelessWidget {
     if (status == SwapStatus.completed && completed != null) {
       final reviewed = request.hasReviewed(currentUserId);
       steps.add(_TimelineStep(
-        title: 'Hoàn thành & đánh giá',
+        title: tr('Hoàn thành & đánh giá'),
         subtitle: reviewed
-            ? 'Bạn đã đánh giá buổi học'
-            : 'Đang chờ bạn đánh giá',
+            ? tr('Bạn đã đánh giá buổi học')
+            : tr('Đang chờ bạn đánh giá'),
         state: reviewed ? _StepState.done : _StepState.current,
         icon: Icons.verified_rounded,
       ));
     } else {
       steps.add(_TimelineStep(
-        title: 'Hoàn thành & đánh giá',
-        subtitle: 'Sau khi buổi học kết thúc',
+        title: tr('Hoàn thành & đánh giá'),
+        subtitle: tr('Sau khi buổi học kết thúc'),
         state: _StepState.future,
         icon: Icons.flag_rounded,
       ));
@@ -235,7 +240,7 @@ class MatchTimeline extends StatelessWidget {
                       const SizedBox(height: 2),
                       Text(
                         step.subtitle,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11.5,
                           height: 1.45,
                           color: AppColors.muted,

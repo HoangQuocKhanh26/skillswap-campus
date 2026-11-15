@@ -14,6 +14,7 @@ import '../widgets/skill_chip.dart';
 import '../widgets/status_badge.dart';
 import '../widgets/user_avatar.dart';
 import 'edit_profile_screen.dart';
+import '../l10n/app_text.dart';
 
 class UserDetailScreen extends StatelessWidget {
   final User user;
@@ -58,14 +59,23 @@ class UserDetailScreen extends StatelessWidget {
     if (!context.mounted) return;
     if (request == null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Bạn đã có lời mời với ${user.name}.')),
+        SnackBar(
+          content: Text(
+            trArgs(
+              'Bạn đã có lời mời với {name}.',
+              {'name': user.name},
+            ),
+          ),
+        ),
       );
       return;
     }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Đã gửi lời mời tới ${user.name}.'),
+        content: Text(
+          trArgs('Đã gửi lời mời tới {name}.', {'name': user.name}),
+        ),
       ),
     );
   }
@@ -99,8 +109,8 @@ class UserDetailScreen extends StatelessWidget {
             stretch: true,
             backgroundColor: AppColors.primary,
             foregroundColor: Colors.white,
-            title: const Text(
-              'Hồ sơ sinh viên',
+            title: Text(
+              tr('Hồ sơ sinh viên'),
               style: TextStyle(color: Colors.white),
             ),
             flexibleSpace: FlexibleSpaceBar(
@@ -172,7 +182,7 @@ class UserDetailScreen extends StatelessWidget {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
-                                    const Icon(
+                                    Icon(
                                       Icons.star_rounded,
                                       color: AppColors.accent,
                                       size: 16,
@@ -188,7 +198,10 @@ class UserDetailScreen extends StatelessWidget {
                                     ),
                                     const SizedBox(width: 4),
                                     Text(
-                                      '($reviewCount đánh giá)',
+                                      trArgs(
+                                        '({count} đánh giá)',
+                                        {'count': '$reviewCount'},
+                                      ),
                                       style: TextStyle(
                                         color:
                                             Colors.white.withValues(alpha: 0.8),
@@ -203,7 +216,7 @@ class UserDetailScreen extends StatelessWidget {
                                           Colors.white.withValues(alpha: 0.3),
                                     ),
                                     const SizedBox(width: 10),
-                                    const Icon(
+                                    Icon(
                                       Icons.bolt_rounded,
                                       color: AppColors.accent,
                                       size: 14,
@@ -240,16 +253,16 @@ class UserDetailScreen extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const _CardHeading(
+                        _CardHeading(
                           icon: Icons.info_outline_rounded,
-                          title: 'Giới thiệu',
+                          title: tr('Giới thiệu'),
                         ),
                         const SizedBox(height: 10),
                         Text(
                           user.bio.isEmpty
-                              ? 'Sinh viên này chưa cập nhật phần giới thiệu.'
+                              ? tr('Sinh viên này chưa cập nhật phần giới thiệu.')
                               : user.bio,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 13.5,
                             height: 1.6,
                             color: AppColors.muted,
@@ -258,7 +271,7 @@ class UserDetailScreen extends StatelessWidget {
                         const SizedBox(height: 12),
                         Row(
                           children: [
-                            const Icon(
+                            Icon(
                               Icons.location_on_outlined,
                               size: 14,
                               color: AppColors.muted,
@@ -266,22 +279,25 @@ class UserDetailScreen extends StatelessWidget {
                             const SizedBox(width: 4),
                             Text(
                               user.campus,
-                              style: const TextStyle(
+                              style: TextStyle(
                                 fontSize: 11.5,
                                 color: AppColors.muted,
                                 fontWeight: FontWeight.w500,
                               ),
                             ),
                             const SizedBox(width: 14),
-                            const Icon(
+                            Icon(
                               Icons.schedule_rounded,
                               size: 14,
                               color: AppColors.muted,
                             ),
                             const SizedBox(width: 4),
                             Text(
-                              'Phản hồi ${user.responseTime}',
-                              style: const TextStyle(
+                              trArgs(
+                                'Phản hồi {time}',
+                                {'time': user.responseTime},
+                              ),
+                              style: TextStyle(
                                 fontSize: 11.5,
                                 color: AppColors.muted,
                                 fontWeight: FontWeight.w500,
@@ -300,9 +316,9 @@ class UserDetailScreen extends StatelessWidget {
                         children: [
                           Row(
                             children: [
-                              const _CardHeading(
+                              _CardHeading(
                                 icon: Icons.auto_awesome_rounded,
-                                title: 'Vì sao phù hợp?',
+                                title: tr('Vì sao phù hợp?'),
                               ),
                               const Spacer(),
                               MatchScoreRing(
@@ -315,7 +331,7 @@ class UserDetailScreen extends StatelessWidget {
                           const SizedBox(height: 6),
                           Text(
                             match.reason,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 12.5,
                               height: 1.5,
                               color: AppColors.muted,
@@ -323,19 +339,19 @@ class UserDetailScreen extends StatelessWidget {
                           ),
                           const SizedBox(height: 14),
                           _MatchDirection(
-                            title: 'Họ có thể dạy bạn',
+                            title: tr('Họ có thể dạy bạn'),
                             skills: match.theyTeachYou,
                             color: AppColors.primary,
                             icon: Icons.arrow_downward_rounded,
-                            emptyText: 'Chưa có kỹ năng trùng với mục tiêu của bạn',
+                            emptyText: tr('Chưa có kỹ năng trùng với mục tiêu của bạn'),
                           ),
                           const SizedBox(height: 12),
                           _MatchDirection(
-                            title: 'Bạn có thể dạy họ',
+                            title: tr('Bạn có thể dạy họ'),
                             skills: match.youTeachThem,
                             color: AppColors.secondary,
                             icon: Icons.arrow_upward_rounded,
-                            emptyText: 'Đối phương chưa cần kỹ năng bạn đang có',
+                            emptyText: tr('Đối phương chưa cần kỹ năng bạn đang có'),
                           ),
                         ],
                       ),
@@ -355,7 +371,7 @@ class UserDetailScreen extends StatelessWidget {
         top: false,
         child: Container(
           padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.surface,
             border: Border(top: BorderSide(color: AppColors.border)),
           ),
@@ -369,7 +385,7 @@ class UserDetailScreen extends StatelessWidget {
                     );
                   },
                   icon: const Icon(Icons.edit_rounded, size: 18),
-                  label: const Text('Chỉnh sửa hồ sơ của tôi'),
+                  label: Text(tr('Chỉnh sửa hồ sơ của tôi')),
                 )
               : _buildActions(context, state, me!, existingStatus),
         ),
@@ -385,10 +401,16 @@ class UserDetailScreen extends StatelessWidget {
   ) {
     if (status != null) {
       final label = switch (status) {
-        SwapStatus.pending => 'Đang chờ ${user.name} phản hồi',
-        SwapStatus.accepted => 'Đã ghép đôi · chọn lịch học trong tab Lịch hẹn',
-        SwapStatus.scheduled => 'Đã có lịch học với ${user.name}',
-        SwapStatus.completed => 'Đã hoàn thành buổi trao đổi',
+        SwapStatus.pending => trArgs(
+            'Đang chờ {name} phản hồi',
+            {'name': user.name},
+          ),
+        SwapStatus.accepted => tr('Đã ghép đôi · chọn lịch học trong tab Lịch hẹn'),
+        SwapStatus.scheduled => trArgs(
+            'Đã có lịch học với {name}',
+            {'name': user.name},
+          ),
+        SwapStatus.completed => tr('Đã hoàn thành buổi trao đổi'),
         _ => status.label,
       };
       return Row(
@@ -420,7 +442,7 @@ class UserDetailScreen extends StatelessWidget {
               child: Text(
                 label,
                 maxLines: 2,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11.5,
                   fontWeight: FontWeight.w600,
                   color: AppColors.muted,
@@ -451,7 +473,7 @@ class UserDetailScreen extends StatelessWidget {
           child: FilledButton.icon(
             onPressed: () => _openRequestSheet(context, state, me),
             icon: const Icon(Icons.handshake_rounded, size: 19),
-            label: const Text('Gửi lời mời kết nối'),
+            label: Text(tr('Gửi lời mời kết nối')),
           ),
         ),
       ],
@@ -501,7 +523,7 @@ class _CardHeading extends StatelessWidget {
         const SizedBox(width: 7),
         Text(
           title,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14.5,
             fontWeight: FontWeight.w800,
             color: AppColors.ink,
@@ -550,7 +572,7 @@ class _MatchDirection extends StatelessWidget {
         if (skills.isEmpty)
           Text(
             emptyText,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 11.5,
               color: AppColors.muted,
               fontStyle: FontStyle.italic,
@@ -594,10 +616,10 @@ class _SkillTabs extends StatelessWidget {
         ),
         child: Column(
           children: [
-            const TabBar(
+            TabBar(
               tabs: [
-                Tab(text: 'Có thể dạy'),
-                Tab(text: 'Muốn học'),
+                Tab(text: tr('Có thể dạy')),
+                Tab(text: tr('Muốn học')),
               ],
             ),
             SizedBox(
@@ -631,9 +653,9 @@ class _SkillGrid extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (skills.isEmpty) {
-      return const Center(
+      return Center(
         child: Text(
-          'Chưa có kỹ năng nào',
+          tr('Chưa có kỹ năng nào'),
           style: TextStyle(fontSize: 12, color: AppColors.muted),
         ),
       );
@@ -664,8 +686,8 @@ class _ReviewsSection extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Text(
-              'Đánh giá gần đây',
+            Text(
+              tr('Đánh giá gần đây'),
               style: TextStyle(
                 fontSize: 14.5,
                 fontWeight: FontWeight.w800,
@@ -674,8 +696,11 @@ class _ReviewsSection extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              '${reviews.length} đánh giá chi tiết',
-              style: const TextStyle(
+              trArgs(
+                '{count} đánh giá chi tiết',
+                {'count': '${reviews.length}'},
+              ),
+              style: TextStyle(
                 fontSize: 10.5,
                 color: AppColors.muted,
               ),
@@ -692,7 +717,7 @@ class _ReviewsSection extends StatelessWidget {
               borderRadius: BorderRadius.circular(18),
               border: Border.all(color: AppColors.border),
             ),
-            child: const Row(
+            child: Row(
               children: [
                 Icon(
                   Icons.chat_bubble_outline_rounded,
@@ -702,7 +727,7 @@ class _ReviewsSection extends StatelessWidget {
                 SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Chưa có đánh giá chi tiết. Một số đánh giá được ẩn trong bản demo.',
+                    tr('Chưa có đánh giá chi tiết. Một số đánh giá được ẩn trong bản demo.'),
                     style: TextStyle(
                       fontSize: 11.5,
                       height: 1.45,
@@ -738,7 +763,7 @@ class _ReviewsSection extends StatelessWidget {
                             children: [
                               Text(
                                 reviewer.name,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 12,
                                   fontWeight: FontWeight.w700,
                                   color: AppColors.ink,
@@ -754,7 +779,7 @@ class _ReviewsSection extends StatelessWidget {
                         ),
                         Text(
                           timeAgo(review.createdAt, state.now),
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10,
                             color: AppColors.muted,
                           ),
@@ -765,7 +790,7 @@ class _ReviewsSection extends StatelessWidget {
                       const SizedBox(height: 7),
                       Text(
                         review.comment,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 12,
                           height: 1.5,
                           color: AppColors.muted,
@@ -795,11 +820,11 @@ class _RequestSheet extends StatefulWidget {
 class _RequestSheetState extends State<_RequestSheet> {
   final _controller = TextEditingController();
 
-  static const List<String> _suggestions = [
-    'Chào bạn, mình thấy chúng ta có thể trao đổi kỹ năng. Bạn có rảnh buổi chiều thứ 5 không?',
-    'Mình muốn học kỹ năng của bạn và có thể dạy lại kỹ năng bạn đang cần. Cùng thử một buổi nhé?',
-    'Chào bạn! Mình đang tìm người học cùng để tiến bộ nhanh hơn. Bạn thấy thế nào?',
-  ];
+  static List<String> get _suggestions => [
+        tr('Chào bạn, mình thấy chúng ta có thể trao đổi kỹ năng. Bạn có rảnh buổi chiều thứ 5 không?'),
+        tr('Mình muốn học kỹ năng của bạn và có thể dạy lại kỹ năng bạn đang cần. Cùng thử một buổi nhé?'),
+        tr('Chào bạn! Mình đang tìm người học cùng để tiến bộ nhanh hơn. Bạn thấy thế nào?'),
+      ];
 
   @override
   void dispose() {
@@ -828,8 +853,8 @@ class _RequestSheetState extends State<_RequestSheet> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
-                      'Gửi lời mời kết nối',
+                    Text(
+                      tr('Gửi lời mời kết nối'),
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.w800,
@@ -837,8 +862,11 @@ class _RequestSheetState extends State<_RequestSheet> {
                       ),
                     ),
                     Text(
-                      'Tới ${widget.partner.name} · hết hạn sau 48 giờ',
-                      style: const TextStyle(
+                      trArgs(
+                        'Tới {name} · hết hạn sau 48 giờ',
+                        {'name': widget.partner.name},
+                      ),
+                      style: TextStyle(
                         fontSize: 11.5,
                         color: AppColors.muted,
                       ),
@@ -854,9 +882,9 @@ class _RequestSheetState extends State<_RequestSheet> {
             maxLines: 4,
             maxLength: 220,
             textCapitalization: TextCapitalization.sentences,
-            decoration: const InputDecoration(
+            decoration: InputDecoration(
               hintText:
-                  'Viết lời nhắn ngắn: bạn muốn học gì, có thể dạy lại gì và thời gian rảnh...',
+                  tr('Viết lời nhắn ngắn: bạn muốn học gì, có thể dạy lại gì và thời gian rảnh...'),
               alignLabelWithHint: true,
             ),
           ),
@@ -869,7 +897,9 @@ class _RequestSheetState extends State<_RequestSheet> {
               separatorBuilder: (_, _) => const SizedBox(width: 6),
               itemBuilder: (context, index) {
                 return ActionChip(
-                  label: Text('Gợi ý ${index + 1}'),
+                  label: Text(
+                    trArgs('Gợi ý {count}', {'count': '${index + 1}'}),
+                  ),
                   avatar: const Icon(
                     Icons.auto_awesome_rounded,
                     size: 14,
@@ -892,11 +922,11 @@ class _RequestSheetState extends State<_RequestSheet> {
               _controller.text.trim(),
             ),
             icon: const Icon(Icons.send_rounded, size: 18),
-            label: const Text('Gửi lời mời'),
+            label: Text(tr('Gửi lời mời')),
           ),
           const SizedBox(height: 4),
           Text(
-            'Đối phương có 48 giờ để chấp nhận, từ chối hoặc để lời mời hết hạn.',
+            tr('Đối phương có 48 giờ để chấp nhận, từ chối hoặc để lời mời hết hạn.'),
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 10,

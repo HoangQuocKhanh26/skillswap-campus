@@ -12,6 +12,7 @@ import 'skill_chip.dart';
 import 'status_badge.dart';
 import 'swap_candidate_card.dart';
 import 'user_avatar.dart';
+import '../l10n/app_text.dart';
 
 class MatchDetailSheet extends StatelessWidget {
   final String requestId;
@@ -64,7 +65,7 @@ class MatchDetailSheet extends StatelessWidget {
                     children: [
                       Text(
                         partner.name,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                           color: AppColors.ink,
@@ -72,7 +73,7 @@ class MatchDetailSheet extends StatelessWidget {
                       ),
                       Text(
                         partner.subtitle,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11,
                           color: AppColors.muted,
                         ),
@@ -91,7 +92,7 @@ class MatchDetailSheet extends StatelessWidget {
             const SizedBox(height: 6),
             Text(
               status.description,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11.5,
                 color: AppColors.muted,
               ),
@@ -104,14 +105,14 @@ class MatchDetailSheet extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Icon(
+                        Icon(
                           Icons.event_available_rounded,
                           size: 16,
                           color: AppColors.primary,
                         ),
                         const SizedBox(width: 6),
-                        const Text(
-                          'Buổi học',
+                        Text(
+                          tr('Buổi học'),
                           style: TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w800,
@@ -121,7 +122,10 @@ class MatchDetailSheet extends StatelessWidget {
                         const Spacer(),
                         if (session.rescheduleCount > 0)
                           SoftBadge(
-                            label: 'Đổi lịch ${session.rescheduleCount} lần',
+                            label: trArgs(
+                              'Đổi lịch {count} lần',
+                              {'count': '${session.rescheduleCount}'},
+                            ),
                             color: AppColors.accent,
                             compact: true,
                             icon: Icons.update_rounded,
@@ -139,7 +143,7 @@ class MatchDetailSheet extends StatelessWidget {
                       const SizedBox(height: 8),
                       Text(
                         '“${session.note}”',
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11.5,
                           height: 1.45,
                           fontStyle: FontStyle.italic,
@@ -182,14 +186,14 @@ class MatchDetailSheet extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      const Icon(
+                      Icon(
                         Icons.chat_bubble_outline_rounded,
                         size: 16,
                         color: AppColors.primary,
                       ),
                       const SizedBox(width: 6),
-                      const Text(
-                        'Lời nhắn',
+                      Text(
+                        tr('Lời nhắn'),
                         style: TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w800,
@@ -201,7 +205,7 @@ class MatchDetailSheet extends StatelessWidget {
                   const SizedBox(height: 8),
                   Text(
                     request.message,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 12,
                       height: 1.5,
                       color: AppColors.muted,
@@ -215,7 +219,7 @@ class MatchDetailSheet extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Row(
+                  Row(
                     children: [
                       Icon(
                         Icons.route_rounded,
@@ -224,7 +228,7 @@ class MatchDetailSheet extends StatelessWidget {
                       ),
                       SizedBox(width: 6),
                       Text(
-                        'Vòng đời ghép đôi',
+                        tr('Vòng đời ghép đôi'),
                         style: TextStyle(
                           fontSize: 12.5,
                           fontWeight: FontWeight.w800,
@@ -258,7 +262,7 @@ class MatchDetailSheet extends StatelessWidget {
                 child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.info_outline_rounded,
                       size: 16,
                       color: AppColors.danger,
@@ -266,8 +270,11 @@ class MatchDetailSheet extends StatelessWidget {
                     const SizedBox(width: 7),
                     Expanded(
                       child: Text(
-                        'Lý do huỷ: ${request.cancelReason}',
-                        style: const TextStyle(
+                        trArgs(
+                          'Lý do huỷ: {reason}',
+                          {'reason': '${request.cancelReason}'},
+                        ),
+                        style: TextStyle(
                           fontSize: 11.5,
                           height: 1.45,
                           color: AppColors.danger,
@@ -284,7 +291,7 @@ class MatchDetailSheet extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Row(
+                    Row(
                       children: [
                         Icon(
                           Icons.reviews_rounded,
@@ -293,7 +300,7 @@ class MatchDetailSheet extends StatelessWidget {
                         ),
                         SizedBox(width: 6),
                         Text(
-                          'Đánh giá hai chiều',
+                          tr('Đánh giá hai chiều'),
                           style: TextStyle(
                             fontSize: 12.5,
                             fontWeight: FontWeight.w800,
@@ -304,16 +311,22 @@ class MatchDetailSheet extends StatelessWidget {
                     ),
                     const SizedBox(height: 10),
                     _ReviewTile(
-                      title: 'Bạn đánh giá ${partner.name}',
+                      title: trArgs(
+                        'Bạn đánh giá {name}',
+                        {'name': partner.name},
+                      ),
                       review: myReview,
-                      emptyText: 'Bạn chưa đánh giá buổi học này',
+                      emptyText: tr('Bạn chưa đánh giá buổi học này'),
                       now: state.now,
                     ),
                     const SizedBox(height: 10),
                     _ReviewTile(
-                      title: '${partner.name} đánh giá bạn',
+                      title: trArgs(
+                        '{name} đánh giá bạn',
+                        {'name': partner.name},
+                      ),
                       review: partnerReview,
-                      emptyText: 'Đối phương chưa đánh giá',
+                      emptyText: tr('Đối phương chưa đánh giá'),
                       now: state.now,
                     ),
                   ],
@@ -346,7 +359,7 @@ class MatchDetailSheet extends StatelessWidget {
                 Expanded(
                   child: OutlinedButton(
                     onPressed: () => rejectFlow(context, state, request),
-                    child: const Text('Từ chối'),
+                    child: Text(tr('Từ chối')),
                   ),
                 ),
                 const SizedBox(width: 10),
@@ -355,7 +368,7 @@ class MatchDetailSheet extends StatelessWidget {
                   child: FilledButton.icon(
                     onPressed: () => acceptFlow(context, state, request),
                     icon: const Icon(Icons.check_rounded, size: 18),
-                    label: const Text('Chấp nhận ghép đôi'),
+                    label: Text(tr('Chấp nhận ghép đôi')),
                   ),
                 ),
               ],
@@ -366,12 +379,12 @@ class MatchDetailSheet extends StatelessWidget {
           FilledButton.tonalIcon(
             onPressed: () => partnerAcceptedFlow(context, state, request),
             icon: const Icon(Icons.science_outlined, size: 17),
-            label: const Text('Demo: đối phương đồng ý'),
+            label: Text(tr('Demo: đối phương đồng ý')),
           ),
           const SizedBox(height: 8),
           OutlinedButton(
             onPressed: () => cancelFlow(context, state, request),
-            child: const Text('Thu hồi lời mời'),
+            child: Text(tr('Thu hồi lời mời')),
           ),
         ];
       case SwapStatus.accepted:
@@ -379,12 +392,12 @@ class MatchDetailSheet extends StatelessWidget {
           FilledButton.icon(
             onPressed: () => openSchedule(context, request),
             icon: const Icon(Icons.event_available_rounded, size: 18),
-            label: const Text('Chọn lịch học'),
+            label: Text(tr('Chọn lịch học')),
           ),
           const SizedBox(height: 8),
           TextButton(
             onPressed: () => cancelFlow(context, state, request),
-            child: const Text('Huỷ kết nối'),
+            child: Text(tr('Huỷ kết nối')),
           ),
         ];
       case SwapStatus.scheduled:
@@ -392,7 +405,7 @@ class MatchDetailSheet extends StatelessWidget {
           FilledButton.icon(
             onPressed: () => openSchedule(context, request),
             icon: const Icon(Icons.update_rounded, size: 18),
-            label: const Text('Đổi lịch học'),
+            label: Text(tr('Đổi lịch học')),
           ),
           const SizedBox(height: 8),
           Row(
@@ -400,7 +413,7 @@ class MatchDetailSheet extends StatelessWidget {
               Expanded(
                 child: OutlinedButton(
                   onPressed: () => cancelFlow(context, state, request),
-                  child: const Text('Huỷ buổi'),
+                  child: Text(tr('Huỷ buổi')),
                 ),
               ),
               const SizedBox(width: 8),
@@ -408,7 +421,7 @@ class MatchDetailSheet extends StatelessWidget {
                 child: OutlinedButton.icon(
                   onPressed: () => completeFlow(context, state, request),
                   icon: const Icon(Icons.science_outlined, size: 15),
-                  label: const Text('Kết thúc (demo)'),
+                  label: Text(tr('Kết thúc (demo)')),
                 ),
               ),
             ],
@@ -420,14 +433,14 @@ class MatchDetailSheet extends StatelessWidget {
             FilledButton.icon(
               onPressed: () => openReview(context, request),
               icon: const Icon(Icons.star_rounded, size: 19),
-              label: const Text('Đánh giá ngay'),
+              label: Text(tr('Đánh giá ngay')),
             ),
           ];
         }
         return [
           OutlinedButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Đóng'),
+            child: Text(tr('Đóng')),
           ),
         ];
       case SwapStatus.rejected:
@@ -436,7 +449,7 @@ class MatchDetailSheet extends StatelessWidget {
         return [
           OutlinedButton(
             onPressed: () => Navigator.of(context).pop(),
-            child: const Text('Đóng'),
+            child: Text(tr('Đóng')),
           ),
         ];
     }
@@ -488,7 +501,7 @@ class _ReviewTile extends StatelessWidget {
         ),
         child: Text(
           emptyText,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 11,
             fontStyle: FontStyle.italic,
             color: AppColors.muted,
@@ -512,7 +525,7 @@ class _ReviewTile extends StatelessWidget {
               Expanded(
                 child: Text(
                   title,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11.5,
                     fontWeight: FontWeight.w700,
                     color: AppColors.ink,
@@ -530,7 +543,7 @@ class _ReviewTile extends StatelessWidget {
             const SizedBox(height: 5),
             Text(
               review!.comment,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11,
                 height: 1.5,
                 color: AppColors.muted,
@@ -545,7 +558,7 @@ class _ReviewTile extends StatelessWidget {
               children: review!.tags
                   .map(
                     (tag) => SkillChip.fromString(
-                      tag,
+                      tr(tag),
                       tone: SkillTone.highlight,
                       compact: true,
                     ),

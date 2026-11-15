@@ -9,6 +9,7 @@ import 'discover_screen.dart';
 import 'profile_screen.dart';
 import 'requests_screen.dart';
 import 'schedule_screen.dart';
+import '../l10n/app_text.dart';
 
 class HomeShell extends StatefulWidget {
   const HomeShell({super.key});
@@ -57,7 +58,7 @@ class _HomeShellState extends State<HomeShell> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: AppColors.surface,
-          border: const Border(top: BorderSide(color: AppColors.border)),
+          border: Border(top: BorderSide(color: AppColors.border)),
           boxShadow: [
             BoxShadow(
               color: AppColors.ink.withValues(alpha: 0.03),
@@ -73,10 +74,10 @@ class _HomeShellState extends State<HomeShell> {
             setState(() => _index = value);
           },
           destinations: [
-            const NavigationDestination(
+            NavigationDestination(
               icon: Icon(Icons.explore_outlined),
               selectedIcon: Icon(Icons.explore_rounded),
-              label: 'Khám phá',
+              label: tr('Khám phá'),
             ),
             NavigationDestination(
               icon: _NavBadge(
@@ -87,7 +88,7 @@ class _HomeShellState extends State<HomeShell> {
                 count: pending,
                 child: const Icon(Icons.swap_horiz_rounded),
               ),
-              label: 'Yêu cầu',
+              label: tr('Yêu cầu'),
             ),
             NavigationDestination(
               icon: _NavBadge(
@@ -100,12 +101,12 @@ class _HomeShellState extends State<HomeShell> {
                 color: AppColors.accent,
                 child: const Icon(Icons.calendar_month_rounded),
               ),
-              label: 'Lịch hẹn',
+              label: tr('Lịch hẹn'),
             ),
-            const NavigationDestination(
+            NavigationDestination(
               icon: Icon(Icons.person_outline_rounded),
               selectedIcon: Icon(Icons.person_rounded),
-              label: 'Hồ sơ',
+              label: tr('Hồ sơ'),
             ),
           ],
         ),
@@ -117,12 +118,12 @@ class _HomeShellState extends State<HomeShell> {
 class _NavBadge extends StatelessWidget {
   final int count;
   final Widget child;
-  final Color color;
+  final Color? color;
 
   const _NavBadge({
     required this.count,
     required this.child,
-    this.color = AppColors.primary,
+    this.color,
   });
 
   @override
@@ -139,7 +140,10 @@ class _NavBadge extends StatelessWidget {
             Positioned(
               top: -2,
               right: -4,
-              child: CountBadge(count: count, color: color),
+              child: CountBadge(
+                count: count,
+                color: color ?? AppColors.primary,
+              ),
             ),
         ],
       ),

@@ -12,6 +12,8 @@ import '../widgets/skill_chip.dart';
 import '../widgets/user_avatar.dart';
 import 'edit_profile_screen.dart';
 import 'login_screen.dart';
+import 'settings_screen.dart';
+import '../l10n/app_text.dart';
 
 class ProfileScreen extends StatelessWidget {
   const ProfileScreen({super.key});
@@ -26,10 +28,19 @@ class ProfileScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hồ sơ của tôi'),
+        title: Text(tr('Hồ sơ của tôi')),
         actions: [
           IconButton(
-            tooltip: 'Chỉnh sửa hồ sơ',
+            tooltip: tr('Cài đặt'),
+            onPressed: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const SettingsScreen(),
+              ),
+            ),
+            icon: const Icon(Icons.settings_outlined, size: 20),
+          ),
+          IconButton(
+            tooltip: tr('Chỉnh sửa hồ sơ'),
             onPressed: () => Navigator.of(context).push(
               MaterialPageRoute(
                 builder: (_) => const EditProfileScreen(),
@@ -46,25 +57,25 @@ class ProfileScreen extends StatelessWidget {
           const SizedBox(height: 12),
           _StatsCard(me: me),
           const SizedBox(height: 4),
-          const SectionTitle(
-            'Kỹ năng của tôi',
+          SectionTitle(
+            tr('Kỹ năng của tôi'),
             padding: EdgeInsets.fromLTRB(4, 20, 4, 10),
           ),
           _SkillsCard(me: me),
-          const SectionTitle(
-            'Đánh giá nhận được',
+          SectionTitle(
+            tr('Đánh giá nhận được'),
             padding: EdgeInsets.fromLTRB(4, 20, 4, 10),
           ),
           _ReceivedReviews(reviews: state.reviewsAboutMe),
-          const SectionTitle(
-            'Kịch bản demo',
+          SectionTitle(
+            tr('Kịch bản demo'),
             padding: EdgeInsets.fromLTRB(4, 20, 4, 10),
           ),
           _DemoTools(state: state),
           const SizedBox(height: 18),
           Center(
             child: Text(
-              'SkillSwap Campus · bản demo môn học\nDữ liệu sinh viên là giả lập',
+              tr('SkillSwap Campus · bản demo môn học\nDữ liệu sinh viên là giả lập'),
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 10,
@@ -149,18 +160,30 @@ class _ProfileHeader extends StatelessWidget {
                         _TinyChip(
                           icon: Icons.star_rounded,
                           label: reviewCount == 0
-                              ? 'Chưa có đánh giá'
-                              : '${rating.toStringAsFixed(1)} · $reviewCount đánh giá',
+                              ? tr('Chưa có đánh giá')
+                              : trArgs(
+                                  '{rating} · {count} đánh giá',
+                                  {
+                                    'rating': rating.toStringAsFixed(1),
+                                    'count': '$reviewCount',
+                                  },
+                                ),
                           color: AppColors.accent,
                         ),
                         _TinyChip(
                           icon: Icons.school_rounded,
-                          label: 'Dạy ${me.teachingSkills.length}',
+                          label: trArgs(
+                            'Dạy {count}',
+                            {'count': '${me.teachingSkills.length}'},
+                          ),
                           color: Colors.white,
                         ),
                         _TinyChip(
                           icon: Icons.menu_book_rounded,
-                          label: 'Học ${me.learningSkills.length}',
+                          label: trArgs(
+                            'Học {count}',
+                            {'count': '${me.learningSkills.length}'},
+                          ),
                           color: Colors.white,
                         ),
                       ],
@@ -180,7 +203,7 @@ class _ProfileHeader extends StatelessWidget {
             ),
             child: Text(
               me.bio.isEmpty
-                  ? 'Chưa có giới thiệu. Bấm chỉnh sửa để thêm vài dòng về bạn.'
+                  ? tr('Chưa có giới thiệu. Bấm chỉnh sửa để thêm vài dòng về bạn.')
                   : me.bio,
               style: TextStyle(
                 color: Colors.white.withValues(alpha: 0.85),
@@ -205,8 +228,8 @@ class _ProfileHeader extends StatelessWidget {
                 backgroundColor: Colors.white.withValues(alpha: 0.08),
               ),
               icon: const Icon(Icons.edit_rounded, size: 16),
-              label: const Text(
-                'Chỉnh sửa hồ sơ',
+              label: Text(
+                tr('Chỉnh sửa hồ sơ'),
                 style: TextStyle(fontSize: 12.5),
               ),
             ),
@@ -277,7 +300,7 @@ class _StatsCard extends StatelessWidget {
           Expanded(
             child: StatTile(
               value: '${state.completedSessionCount}',
-              label: 'Buổi hoàn thành',
+              label: tr('Buổi hoàn thành'),
               icon: Icons.task_alt_rounded,
               color: AppColors.success,
             ),
@@ -286,7 +309,7 @@ class _StatsCard extends StatelessWidget {
           Expanded(
             child: StatTile(
               value: '${state.partnerCount}',
-              label: 'Đối tác học',
+              label: tr('Đối tác học'),
               icon: Icons.people_alt_rounded,
               color: AppColors.primary,
             ),
@@ -295,7 +318,7 @@ class _StatsCard extends StatelessWidget {
           Expanded(
             child: StatTile(
               value: rating == 0 ? '—' : rating.toStringAsFixed(1),
-              label: 'Đánh giá TB',
+              label: tr('Đánh giá TB'),
               icon: Icons.star_rounded,
               color: AppColors.accent,
             ),
@@ -304,7 +327,7 @@ class _StatsCard extends StatelessWidget {
           Expanded(
             child: StatTile(
               value: '${state.needsReviewCount}',
-              label: 'Chờ đánh giá',
+              label: tr('Chờ đánh giá'),
               icon: Icons.rate_review_rounded,
               color: AppColors.info,
             ),
@@ -341,8 +364,18 @@ class _SkillsCard extends StatelessWidget {
           children: [
             TabBar(
               tabs: [
-                Tab(text: 'Tôi dạy (${me.teachingSkills.length})'),
-                Tab(text: 'Tôi muốn học (${me.learningSkills.length})'),
+                Tab(
+                  text: trArgs(
+                    'Tôi dạy ({count})',
+                    {'count': '${me.teachingSkills.length}'},
+                  ),
+                ),
+                Tab(
+                  text: trArgs(
+                    'Tôi muốn học ({count})',
+                    {'count': '${me.learningSkills.length}'},
+                  ),
+                ),
               ],
             ),
             SizedBox(
@@ -352,12 +385,12 @@ class _SkillsCard extends StatelessWidget {
                   _MySkills(
                     skills: me.teachingSkills,
                     tone: SkillTone.teaching,
-                    emptyText: 'Chưa có kỹ năng dạy',
+                    emptyText: tr('Chưa có kỹ năng dạy'),
                   ),
                   _MySkills(
                     skills: me.learningSkills,
                     tone: SkillTone.learning,
-                    emptyText: 'Chưa có kỹ năng muốn học',
+                    emptyText: tr('Chưa có kỹ năng muốn học'),
                   ),
                 ],
               ),
@@ -370,8 +403,8 @@ class _SkillsCard extends StatelessWidget {
                 ),
               ),
               icon: const Icon(Icons.tune_rounded, size: 16),
-              label: const Text(
-                'Cập nhật kỹ năng',
+              label: Text(
+                tr('Cập nhật kỹ năng'),
                 style: TextStyle(fontSize: 12),
               ),
             ),
@@ -399,7 +432,7 @@ class _MySkills extends StatelessWidget {
       return Center(
         child: Text(
           emptyText,
-          style: const TextStyle(fontSize: 11.5, color: AppColors.muted),
+          style: TextStyle(fontSize: 11.5, color: AppColors.muted),
         ),
       );
     }
@@ -432,7 +465,7 @@ class _ReceivedReviews extends StatelessWidget {
           borderRadius: BorderRadius.circular(18),
           border: Border.all(color: AppColors.border),
         ),
-        child: const Row(
+        child: Row(
           children: [
             Icon(
               Icons.rate_review_outlined,
@@ -442,7 +475,7 @@ class _ReceivedReviews extends StatelessWidget {
             SizedBox(width: 9),
             Expanded(
               child: Text(
-                'Chưa có đánh giá nào. Hoàn thành buổi học đầu tiên để nhận đánh giá từ đối phương.',
+                tr('Chưa có đánh giá nào. Hoàn thành buổi học đầu tiên để nhận đánh giá từ đối phương.'),
                 style: TextStyle(
                   fontSize: 11.5,
                   height: 1.45,
@@ -479,15 +512,20 @@ class _ReceivedReviews extends StatelessWidget {
                       children: [
                         Text(
                           reviewer.name,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
                             color: AppColors.ink,
                           ),
                         ),
                         Text(
-                          'Đánh giá ${timeAgo(review.createdAt, state.now)}',
-                          style: const TextStyle(
+                          trArgs(
+                            'Đánh giá {time}',
+                            {
+                              'time': timeAgo(review.createdAt, state.now),
+                            },
+                          ),
+                          style: TextStyle(
                             fontSize: 9.5,
                             color: AppColors.muted,
                           ),
@@ -506,7 +544,7 @@ class _ReceivedReviews extends StatelessWidget {
                 const SizedBox(height: 8),
                 Text(
                   '“${review.comment}”',
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11.5,
                     height: 1.5,
                     color: AppColors.muted,
@@ -521,7 +559,7 @@ class _ReceivedReviews extends StatelessWidget {
                   children: review.tags
                       .map(
                         (tag) => SkillChip.fromString(
-                          tag,
+                          tr(tag),
                           tone: SkillTone.highlight,
                           compact: true,
                         ),
@@ -554,7 +592,7 @@ class _DemoTools extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Row(
+          Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
@@ -565,9 +603,9 @@ class _DemoTools extends StatelessWidget {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Dữ liệu demo đã bao gồm đủ các nhánh: chờ phản hồi, đã ghép đôi, '
+                  tr('Dữ liệu demo đã bao gồm đủ các nhánh: chờ phản hồi, đã ghép đôi, '
                   'đã đặt lịch, hoàn thành, bị từ chối, hết hạn và đã huỷ. '
-                  'Dùng các nút bên dưới để thuyết trình.',
+                  'Dùng các nút bên dưới để thuyết trình.'),
                   style: TextStyle(
                     fontSize: 10.5,
                     height: 1.5,
@@ -585,8 +623,8 @@ class _DemoTools extends StatelessWidget {
                   onPressed: () {
                     state.resetSkippedUsers();
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(
-                        content: Text('Đã khôi phục các hồ sơ đã bỏ qua.'),
+                      SnackBar(
+                        content: Text(tr('Đã khôi phục các hồ sơ đã bỏ qua.')),
                       ),
                     );
                   },
@@ -595,8 +633,8 @@ class _DemoTools extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                   ),
                   icon: const Icon(Icons.restore_rounded, size: 15),
-                  label: const Text(
-                    'Khôi phục hồ sơ',
+                  label: Text(
+                    tr('Khôi phục hồ sơ'),
                     style: TextStyle(fontSize: 10.5),
                   ),
                 ),
@@ -610,8 +648,8 @@ class _DemoTools extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                   ),
                   icon: const Icon(Icons.refresh_rounded, size: 15),
-                  label: const Text(
-                    'Reset dữ liệu',
+                  label: Text(
+                    tr('Reset dữ liệu'),
                     style: TextStyle(fontSize: 10.5),
                   ),
                 ),
@@ -631,8 +669,8 @@ class _DemoTools extends StatelessWidget {
                 ),
               ),
               icon: const Icon(Icons.logout_rounded, size: 15),
-              label: const Text(
-                'Đăng xuất',
+              label: Text(
+                tr('Đăng xuất'),
                 style: TextStyle(fontSize: 11),
               ),
             ),
@@ -646,19 +684,19 @@ class _DemoTools extends StatelessWidget {
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Đặt lại dữ liệu demo?'),
-        content: const Text(
-          'Toàn bộ lời mời, lịch học và đánh giá sẽ trở về trạng thái ban đầu. '
-          'Hồ sơ của bạn vẫn được giữ nguyên.',
+        title: Text(tr('Đặt lại dữ liệu demo?')),
+        content: Text(
+          tr('Toàn bộ lời mời, lịch học và đánh giá sẽ trở về trạng thái ban đầu. '
+          'Hồ sơ của bạn vẫn được giữ nguyên.'),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.of(dialogContext).pop(false),
-            child: const Text('Huỷ'),
+            child: Text(tr('Huỷ')),
           ),
           FilledButton(
             onPressed: () => Navigator.of(dialogContext).pop(true),
-            child: const Text('Đặt lại'),
+            child: Text(tr('Đặt lại')),
           ),
         ],
       ),
@@ -666,7 +704,7 @@ class _DemoTools extends StatelessWidget {
     if (confirmed == true && context.mounted) {
       state.resetDemo();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Đã reset dữ liệu demo về ban đầu.')),
+        SnackBar(content: Text(tr('Đã reset dữ liệu demo về ban đầu.'))),
       );
     }
   }

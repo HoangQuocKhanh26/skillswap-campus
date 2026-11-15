@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'app_state.dart';
+import '../l10n/app_text.dart';
 
 /// Cho phép mọi màn hình truy cập [AppState] và tự rebuild khi dữ liệu đổi.
 class AppScope extends InheritedNotifier<AppState> {
@@ -12,7 +13,7 @@ class AppScope extends InheritedNotifier<AppState> {
 
   static AppState of(BuildContext context) {
     final scope = context.dependOnInheritedWidgetOfExactType<AppScope>();
-    assert(scope != null, 'Không tìm thấy AppScope trong widget tree');
+    assert(scope != null, tr('Không tìm thấy AppScope trong widget tree'));
     return scope!.notifier!;
   }
 
@@ -20,7 +21,7 @@ class AppScope extends InheritedNotifier<AppState> {
   static AppState read(BuildContext context) {
     final scope =
         context.getInheritedWidgetOfExactType<AppScope>();
-    assert(scope != null, 'Không tìm thấy AppScope trong widget tree');
+    assert(scope != null, tr('Không tìm thấy AppScope trong widget tree'));
     return scope!.notifier!;
   }
 }

@@ -5,6 +5,7 @@ import '../models/user.dart';
 import '../state/app_scope.dart';
 import '../theme/app_theme.dart';
 import 'home_shell.dart';
+import '../l10n/app_text.dart';
 
 class ProfileSetupScreen extends StatefulWidget {
   const ProfileSetupScreen({super.key});
@@ -23,11 +24,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   final Set<String> _teaching = {};
   final Set<String> _learning = {};
 
-  static const List<String> _steps = [
-    'Thông tin',
-    'Kỹ năng dạy',
-    'Kỹ năng học',
-  ];
+  static List<String> get _steps => [
+        tr('Thông tin'),
+        tr('Kỹ năng dạy'),
+        tr('Kỹ năng học'),
+      ];
 
   @override
   void dispose() {
@@ -55,23 +56,23 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
     if (_step == 0) {
       if (_nameController.text.trim().isEmpty) {
-        _showError('Vui lòng nhập họ và tên của bạn.');
+        _showError(tr('Vui lòng nhập họ và tên của bạn.'));
         return;
       }
       if (_majorController.text.trim().isEmpty) {
-        _showError('Vui lòng nhập ngành học của bạn.');
+        _showError(tr('Vui lòng nhập ngành học của bạn.'));
         return;
       }
     }
 
     if (_step == 1 && _teaching.isEmpty) {
-      _showError('Chọn ít nhất một kỹ năng bạn có thể dạy.');
+      _showError(tr('Chọn ít nhất một kỹ năng bạn có thể dạy.'));
       return;
     }
 
     if (_step == 2) {
       if (_learning.isEmpty) {
-        _showError('Chọn ít nhất một kỹ năng bạn muốn học.');
+        _showError(tr('Chọn ít nhất một kỹ năng bạn muốn học.'));
         return;
       }
       _complete();
@@ -94,14 +95,14 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
       id: 'me',
       name: _nameController.text.trim(),
       bio: _bioController.text.trim().isEmpty
-          ? 'Mình mới tham gia SkillSwap Campus và đang tìm người cùng trao đổi kỹ năng.'
+          ? tr('Mình mới tham gia SkillSwap Campus và đang tìm người cùng trao đổi kỹ năng.')
           : _bioController.text.trim(),
       avatarUrl: '',
       major: _majorController.text.trim(),
       year: _year,
       teachingSkills: _teaching.map(Skill.fromName).toList(),
       learningSkills: _learning.map(Skill.fromName).toList(),
-      responseTime: 'trong 2 giờ',
+      responseTime: tr('trong 2 giờ'),
     );
 
     AppScope.of(context).startSession(user);
@@ -113,10 +114,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
 
   void _fillDemo() {
     setState(() {
-      _nameController.text = 'Minh Thư';
-      _majorController.text = 'Truyền thông đa phương tiện';
+      _nameController.text = tr('Minh Thư');
+      _majorController.text = tr('Truyền thông đa phương tiện');
       _bioController.text =
-          'Mình làm content và dựng video cho CLB. Muốn học Flutter để tự làm app quản lý lịch học và portfolio.';
+          tr('Mình làm content và dựng video cho CLB. Muốn học Flutter để tự làm app quản lý lịch học và portfolio.');
       _year = 'K19';
       _teaching
         ..clear()
@@ -126,7 +127,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         ..addAll(['Flutter', 'UI/UX', 'Public Speaking']);
     });
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Đã điền hồ sơ mẫu, bạn có thể chỉnh lại.')),
+      SnackBar(content: Text(tr('Đã điền hồ sơ mẫu, bạn có thể chỉnh lại.'))),
     );
   }
 
@@ -134,11 +135,11 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Tạo hồ sơ sinh viên'),
+        title: Text(tr('Tạo hồ sơ sinh viên')),
         actions: [
           TextButton(
             onPressed: _fillDemo,
-            child: const Text('Dùng mẫu'),
+            child: Text(tr('Dùng mẫu')),
           ),
           const SizedBox(width: 8),
         ],
@@ -157,19 +158,19 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 child: switch (_step) {
                   0 => _buildInfoStep(),
                   1 => _buildSkillStep(
-                      title: 'Bạn có thể dạy gì?',
+                      title: tr('Bạn có thể dạy gì?'),
                       subtitle:
-                          'Chọn những kỹ năng bạn tự tin chia sẻ cho bạn học. '
-                          'Không cần là chuyên gia, chỉ cần hơn người cần học một chút!',
+                          tr('Chọn những kỹ năng bạn tự tin chia sẻ cho bạn học. '
+                          'Không cần là chuyên gia, chỉ cần hơn người cần học một chút!'),
                       selected: _teaching,
                       tone: AppColors.secondary,
                       icon: Icons.school_rounded,
                     ),
                   _ => _buildSkillStep(
-                      title: 'Bạn muốn học gì?',
+                      title: tr('Bạn muốn học gì?'),
                       subtitle:
-                          'Chọn kỹ năng bạn muốn trao đổi. App sẽ ưu tiên gợi ý '
-                          'người có thể dạy đúng những kỹ năng này.',
+                          tr('Chọn kỹ năng bạn muốn trao đổi. App sẽ ưu tiên gợi ý '
+                          'người có thể dạy đúng những kỹ năng này.'),
                       selected: _learning,
                       tone: AppColors.primary,
                       icon: Icons.menu_book_rounded,
@@ -184,7 +185,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         top: false,
         child: Container(
           padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.surface,
             border: Border(top: BorderSide(color: AppColors.border)),
           ),
@@ -201,7 +202,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 child: FilledButton(
                   onPressed: _next,
                   child: Text(
-                    _step == 2 ? 'Hoàn tất hồ sơ' : 'Tiếp tục',
+                    _step == 2 ? tr('Hoàn tất hồ sơ') : tr('Tiếp tục'),
                   ),
                 ),
               ),
@@ -250,10 +251,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         Center(
           child: TextButton.icon(
             onPressed: () => _showError(
-              'Ảnh đại diện được tạo tự động từ tên của bạn trong bản demo.',
+              tr('Ảnh đại diện được tạo tự động từ tên của bạn trong bản demo.'),
             ),
             icon: const Icon(Icons.face_rounded, size: 16),
-            label: const Text('Ảnh đại diện tự động'),
+            label: Text(tr('Ảnh đại diện tự động')),
           ),
         ),
         const SizedBox(height: 12),
@@ -261,9 +262,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           controller: _nameController,
           textCapitalization: TextCapitalization.words,
           onChanged: (_) => setState(() {}),
-          decoration: const InputDecoration(
-            labelText: 'Họ và tên *',
-            hintText: 'Ví dụ: Ngọc Anh',
+          decoration: InputDecoration(
+            labelText: tr('Họ và tên *'),
+            hintText: tr('Ví dụ: Ngọc Anh'),
             prefixIcon: Icon(Icons.badge_outlined),
           ),
         ),
@@ -276,9 +277,9 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               child: TextField(
                 controller: _majorController,
                 textCapitalization: TextCapitalization.words,
-                decoration: const InputDecoration(
-                  labelText: 'Ngành học *',
-                  hintText: 'Kỹ thuật phần mềm',
+                decoration: InputDecoration(
+                  labelText: tr('Ngành học *'),
+                  hintText: tr('Kỹ thuật phần mềm'),
                   prefixIcon: Icon(Icons.school_outlined),
                 ),
               ),
@@ -288,8 +289,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               flex: 2,
               child: DropdownButtonFormField<String>(
                 initialValue: _year,
-                decoration: const InputDecoration(
-                  labelText: 'Khoá',
+                decoration: InputDecoration(
+                  labelText: tr('Khoá'),
                   contentPadding:
                       EdgeInsets.symmetric(horizontal: 12, vertical: 15),
                 ),
@@ -314,10 +315,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
           maxLines: 4,
           maxLength: 240,
           textCapitalization: TextCapitalization.sentences,
-          decoration: const InputDecoration(
-            labelText: 'Giới thiệu bản thân',
+          decoration: InputDecoration(
+            labelText: tr('Giới thiệu bản thân'),
             hintText:
-                'Bạn đang học gì, có kinh nghiệm gì và muốn trao đổi điều gì?',
+                tr('Bạn đang học gì, có kinh nghiệm gì và muốn trao đổi điều gì?'),
             alignLabelWithHint: true,
           ),
         ),
@@ -328,7 +329,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             color: AppColors.accentSoft,
             borderRadius: BorderRadius.circular(16),
           ),
-          child: const Row(
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Icon(
@@ -339,8 +340,8 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
               SizedBox(width: 8),
               Expanded(
                 child: Text(
-                  'Mẹo: hồ sơ càng cụ thể càng dễ được ghép cặp. '
-                  'Ví dụ “mình biết Flutter, muốn học Java”.',
+                  tr('Mẹo: hồ sơ càng cụ thể càng dễ được ghép cặp. '
+                  'Ví dụ “mình biết Flutter, muốn học Java”.'),
                   style: TextStyle(
                     fontSize: 12,
                     height: 1.45,
@@ -383,7 +384,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 children: [
                   Text(
                     title,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -0.4,
@@ -391,7 +392,10 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                     ),
                   ),
                   Text(
-                    'Đã chọn ${selected.length} kỹ năng',
+                    trArgs(
+                      'Đã chọn {count} kỹ năng',
+                      {'count': '${selected.length}'},
+                    ),
                     style: TextStyle(
                       fontSize: 11.5,
                       fontWeight: FontWeight.w700,
@@ -406,7 +410,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
         const SizedBox(height: 10),
         Text(
           subtitle,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 12.5,
             height: 1.5,
             color: AppColors.muted,
@@ -425,7 +429,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                   children: [
                     Text(
                       category,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 13,
                         fontWeight: FontWeight.w800,
                         color: AppColors.ink,
@@ -492,7 +496,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
             ),
             child: Row(
               children: [
-                const Icon(
+                Icon(
                   Icons.auto_awesome_rounded,
                   size: 18,
                   color: AppColors.primary,
@@ -500,7 +504,7 @@ class _ProfileSetupScreenState extends State<ProfileSetupScreen> {
                 const SizedBox(width: 8),
                 Expanded(
                   child: Text(
-                    'Bạn có thể chỉnh sửa kỹ năng bất cứ lúc nào trong Hồ sơ.',
+                    tr('Bạn có thể chỉnh sửa kỹ năng bất cứ lúc nào trong Hồ sơ.'),
                     style: TextStyle(
                       fontSize: 11.5,
                       height: 1.45,

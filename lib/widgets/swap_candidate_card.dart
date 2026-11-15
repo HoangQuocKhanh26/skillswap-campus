@@ -8,6 +8,7 @@ import 'rating_bar.dart';
 import 'skill_chip.dart';
 import 'status_badge.dart';
 import 'user_avatar.dart';
+import '../l10n/app_text.dart';
 
 /// Card hồ sơ dùng trong bộ bài vuốt ở màn hình Khám phá.
 class SwapCandidateCard extends StatelessWidget {
@@ -29,7 +30,7 @@ class SwapCandidateCard extends StatelessWidget {
       clipBehavior: Clip.antiAlias,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(26),
-        side: const BorderSide(color: AppColors.border),
+        side: BorderSide(color: AppColors.border),
       ),
       child: InkWell(
         onTap: onTap,
@@ -60,7 +61,7 @@ class SwapCandidateCard extends StatelessWidget {
                                 user.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 20,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: -0.5,
@@ -70,7 +71,7 @@ class SwapCandidateCard extends StatelessWidget {
                             ),
                             const SizedBox(width: 6),
                             if (user.rating >= 4.9)
-                              const Icon(
+                              Icon(
                                 Icons.verified_rounded,
                                 size: 17,
                                 color: AppColors.info,
@@ -82,7 +83,7 @@ class SwapCandidateCard extends StatelessWidget {
                           user.subtitle,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 12,
                             fontWeight: FontWeight.w500,
                             color: AppColors.muted,
@@ -109,8 +110,8 @@ class SwapCandidateCard extends StatelessWidget {
                 children: [
                   SoftBadge(
                     label: result.isMutual
-                        ? 'Trao đổi 2 chiều'
-                        : 'Gợi ý cho bạn',
+                        ? tr('Trao đổi 2 chiều')
+                        : tr('Gợi ý cho bạn'),
                     color: result.isMutual
                         ? AppColors.success
                         : AppColors.slate,
@@ -125,7 +126,7 @@ class SwapCandidateCard extends StatelessWidget {
                       result.label,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w700,
                         color: AppColors.muted,
@@ -139,7 +140,7 @@ class SwapCandidateCard extends StatelessWidget {
                 user.bio,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   height: 1.45,
                   color: AppColors.muted,
@@ -152,7 +153,7 @@ class SwapCandidateCard extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               Text(
-                'Có thể dạy',
+                tr('Có thể dạy'),
                 style: TextStyle(
                   fontSize: 11,
                   fontWeight: FontWeight.w800,
@@ -177,14 +178,14 @@ class SwapCandidateCard extends StatelessWidget {
                 const SizedBox(height: 10),
                 Row(
                   children: [
-                    const Icon(
+                    Icon(
                       Icons.menu_book_rounded,
                       size: 14,
                       color: AppColors.muted,
                     ),
                     const SizedBox(width: 5),
-                    const Text(
-                      'Muốn học: ',
+                    Text(
+                      tr('Muốn học: '),
                       style: TextStyle(
                         fontSize: 11.5,
                         fontWeight: FontWeight.w700,
@@ -196,7 +197,7 @@ class SwapCandidateCard extends StatelessWidget {
                         user.learningSkills.map((s) => s.name).join(', '),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 11.5,
                           fontWeight: FontWeight.w600,
                           color: AppColors.ink,
@@ -211,15 +212,18 @@ class SwapCandidateCard extends StatelessWidget {
               const SizedBox(height: 10),
               Row(
                 children: [
-                  const Icon(
+                  Icon(
                     Icons.bolt_rounded,
                     size: 15,
                     color: AppColors.accent,
                   ),
                   const SizedBox(width: 3),
                   Text(
-                    'Phản hồi ${user.responseTime}',
-                    style: const TextStyle(
+                    trArgs(
+                      'Phản hồi {time}',
+                      {'time': user.responseTime},
+                    ),
+                    style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
                       color: AppColors.muted,
@@ -227,7 +231,7 @@ class SwapCandidateCard extends StatelessWidget {
                   ),
                   const Spacer(),
                   Text(
-                    'Xem hồ sơ',
+                    tr('Xem hồ sơ'),
                     style: TextStyle(
                       fontSize: 11,
                       fontWeight: FontWeight.w700,
@@ -235,7 +239,7 @@ class SwapCandidateCard extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 2),
-                  const Icon(
+                  Icon(
                     Icons.chevron_right_rounded,
                     size: 16,
                     color: AppColors.primary,
@@ -275,11 +279,11 @@ class _ExchangeBox extends StatelessWidget {
         children: [
           Expanded(
             child: _Direction(
-              label: 'Bạn dạy họ',
+              label: tr('Bạn dạy họ'),
               skills: youTeach,
               icon: Icons.arrow_upward_rounded,
               color: AppColors.secondary,
-              emptyText: 'Chưa có kỹ năng trùng',
+              emptyText: tr('Chưa có kỹ năng trùng'),
             ),
           ),
           Container(
@@ -290,11 +294,11 @@ class _ExchangeBox extends StatelessWidget {
           ),
           Expanded(
             child: _Direction(
-              label: 'Họ dạy bạn',
+              label: tr('Họ dạy bạn'),
               skills: theyTeach,
               icon: Icons.arrow_downward_rounded,
               color: AppColors.primary,
-              emptyText: 'Thử kỹ năng khác',
+              emptyText: tr('Thử kỹ năng khác'),
             ),
           ),
         ],
@@ -341,7 +345,7 @@ class _Direction extends StatelessWidget {
         if (skills.isEmpty)
           Text(
             emptyText,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 10.5,
               fontStyle: FontStyle.italic,
               color: AppColors.muted,
@@ -389,7 +393,7 @@ class SessionInfoLine extends StatelessWidget {
       children: [
         Row(
           children: [
-            const Icon(
+            Icon(
               Icons.calendar_today_rounded,
               size: 14,
               color: AppColors.muted,
@@ -397,7 +401,7 @@ class SessionInfoLine extends StatelessWidget {
             const SizedBox(width: 6),
             Text(
               '${formatDate(startTime)} · ${formatTime(startTime)}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 fontWeight: FontWeight.w700,
                 color: AppColors.ink,
@@ -408,7 +412,7 @@ class SessionInfoLine extends StatelessWidget {
         const SizedBox(height: 5),
         Row(
           children: [
-            const Icon(
+            Icon(
               Icons.schedule_rounded,
               size: 14,
               color: AppColors.muted,
@@ -417,7 +421,7 @@ class SessionInfoLine extends StatelessWidget {
             Text(
               '${formatTimeRange(startTime, durationMinutes)} · '
               '${durationLabel(durationMinutes)}',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 12,
                 color: AppColors.muted,
               ),
@@ -428,7 +432,7 @@ class SessionInfoLine extends StatelessWidget {
         Row(
           children: [
             Icon(
-              modeLabel == 'Trực tuyến'
+              modeLabel == tr('Trực tuyến')
                   ? Icons.videocam_rounded
                   : Icons.place_rounded,
               size: 14,
@@ -440,7 +444,7 @@ class SessionInfoLine extends StatelessWidget {
                 location,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 12,
                   color: AppColors.muted,
                 ),

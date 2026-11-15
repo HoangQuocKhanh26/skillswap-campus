@@ -4,6 +4,7 @@ import '../state/app_scope.dart';
 import '../theme/app_theme.dart';
 import 'home_shell.dart';
 import 'profile_setup_screen.dart';
+import '../l10n/app_text.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -48,7 +49,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        decoration: const BoxDecoration(
+        decoration: BoxDecoration(
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
@@ -74,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const _BrandMark(),
                       const SizedBox(height: 22),
-                      const Text(
+                      Text(
                         'SkillSwap Campus',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -86,8 +87,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 10),
-                      const Text(
-                        'Kết nối – trao đổi – cùng tiến bộ\nngay trong lớp học của bạn',
+                      Text(
+                        tr('Kết nối – trao đổi – cùng tiến bộ\nngay trong lớp học của bạn'),
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           fontSize: 13.5,
@@ -105,8 +106,8 @@ class _LoginScreenState extends State<LoginScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
-                                const Text(
-                                  'Chào mừng trở lại',
+                                Text(
+                                  tr('Chào mừng trở lại'),
                                   style: TextStyle(
                                     fontSize: 21,
                                     fontWeight: FontWeight.w800,
@@ -115,8 +116,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                 ),
                                 const SizedBox(height: 4),
-                                const Text(
-                                  'Dùng email sinh viên để tiếp tục',
+                                Text(
+                                  tr('Dùng email sinh viên để tiếp tục'),
                                   style: TextStyle(
                                     fontSize: 12.5,
                                     color: AppColors.muted,
@@ -135,10 +136,10 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.trim().isEmpty) {
-                                      return 'Vui lòng nhập email';
+                                      return tr('Vui lòng nhập email');
                                     }
                                     if (!value.contains('@')) {
-                                      return 'Email chưa đúng định dạng';
+                                      return tr('Email chưa đúng định dạng');
                                     }
                                     return null;
                                   },
@@ -150,8 +151,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                   textInputAction: TextInputAction.done,
                                   onFieldSubmitted: (_) => _login(),
                                   decoration: InputDecoration(
-                                    labelText: 'Mật khẩu',
-                                    hintText: 'Tối thiểu 6 ký tự',
+                                    labelText: tr('Mật khẩu'),
+                                    hintText: tr('Tối thiểu 6 ký tự'),
                                     prefixIcon:
                                         const Icon(Icons.lock_outline_rounded),
                                     suffixIcon: IconButton(
@@ -168,7 +169,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                   ),
                                   validator: (value) {
                                     if (value == null || value.length < 6) {
-                                      return 'Mật khẩu cần ít nhất 6 ký tự';
+                                      return tr('Mật khẩu cần ít nhất 6 ký tự');
                                     }
                                     return null;
                                   },
@@ -176,7 +177,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 const SizedBox(height: 18),
                                 FilledButton(
                                   onPressed: _login,
-                                  child: const Text('Đăng nhập'),
+                                  child: Text(tr('Đăng nhập')),
                                 ),
                                 const SizedBox(height: 12),
                                 Row(
@@ -187,7 +188,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         horizontal: 12,
                                       ),
                                       child: Text(
-                                        'hoặc',
+                                        tr('hoặc'),
                                         style: TextStyle(
                                           fontSize: 11.5,
                                           color: AppColors.muted.withValues(
@@ -206,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     Icons.auto_awesome_rounded,
                                     size: 18,
                                   ),
-                                  label: const Text('Vào bằng tài khoản demo'),
+                                  label: Text(tr('Vào bằng tài khoản demo')),
                                 ),
                                 const SizedBox(height: 4),
                                 TextButton(
@@ -218,7 +219,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       ),
                                     );
                                   },
-                                  child: const Text('Tạo hồ sơ sinh viên mới'),
+                                  child: Text(tr('Tạo hồ sơ sinh viên mới')),
                                 ),
                               ],
                             ),
@@ -237,7 +238,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           const SizedBox(width: 5),
                           Flexible(
                             child: Text(
-                              'Dữ liệu trong app là hồ sơ giả lập phục vụ demo môn học.',
+                              tr('Dữ liệu trong app là hồ sơ giả lập phục vụ demo môn học.'),
                               style: TextStyle(
                                 fontSize: 10.5,
                                 color: AppColors.muted.withValues(alpha: 0.85),
@@ -268,7 +269,7 @@ class _BrandMark extends StatelessWidget {
         width: 82,
         height: 82,
         decoration: BoxDecoration(
-          gradient: const LinearGradient(
+          gradient: LinearGradient(
             colors: AppColors.brandGradient,
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,

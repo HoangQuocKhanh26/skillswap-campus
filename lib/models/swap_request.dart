@@ -1,3 +1,5 @@
+import '../l10n/app_text.dart';
+
 /// Các trạng thái trong vòng đời của một lời mời ghép cặp.
 enum SwapStatus {
   pending,
@@ -13,38 +15,38 @@ extension SwapStatusX on SwapStatus {
   String get label {
     switch (this) {
       case SwapStatus.pending:
-        return 'Đang chờ';
+        return tr('Đang chờ');
       case SwapStatus.accepted:
-        return 'Đã chấp nhận';
+        return tr('Đã chấp nhận');
       case SwapStatus.scheduled:
-        return 'Đã đặt lịch';
+        return tr('Đã đặt lịch');
       case SwapStatus.completed:
-        return 'Đã hoàn thành';
+        return tr('Đã hoàn thành');
       case SwapStatus.rejected:
-        return 'Đã từ chối';
+        return tr('Đã từ chối');
       case SwapStatus.expired:
-        return 'Hết hạn';
+        return tr('Hết hạn');
       case SwapStatus.cancelled:
-        return 'Đã huỷ';
+        return tr('Đã huỷ');
     }
   }
 
   String get description {
     switch (this) {
       case SwapStatus.pending:
-        return 'Đang chờ phản hồi';
+        return tr('Đang chờ phản hồi');
       case SwapStatus.accepted:
-        return 'Hai bạn đã ghép đôi, hãy chọn lịch học';
+        return tr('Hai bạn đã ghép đôi, hãy chọn lịch học');
       case SwapStatus.scheduled:
-        return 'Buổi trao đổi đã được lên lịch';
+        return tr('Buổi trao đổi đã được lên lịch');
       case SwapStatus.completed:
-        return 'Buổi học đã kết thúc';
+        return tr('Buổi học đã kết thúc');
       case SwapStatus.rejected:
-        return 'Lời mời đã bị từ chối';
+        return tr('Lời mời đã bị từ chối');
       case SwapStatus.expired:
-        return 'Lời mời quá hạn phản hồi';
+        return tr('Lời mời quá hạn phản hồi');
       case SwapStatus.cancelled:
-        return 'Buổi trao đổi đã bị huỷ';
+        return tr('Buổi trao đổi đã bị huỷ');
     }
   }
 
@@ -63,7 +65,7 @@ extension SwapStatusX on SwapStatus {
 enum SessionMode { offline, online }
 
 extension SessionModeX on SessionMode {
-  String get label => this == SessionMode.offline ? 'Trực tiếp' : 'Trực tuyến';
+  String get label => this == SessionMode.offline ? tr('Trực tiếp') : tr('Trực tuyến');
 
   String get shortLabel =>
       this == SessionMode.offline ? 'Offline' : 'Online';
@@ -75,11 +77,11 @@ extension SessionStatusX on SessionStatus {
   String get label {
     switch (this) {
       case SessionStatus.scheduled:
-        return 'Sắp diễn ra';
+        return tr('Sắp diễn ra');
       case SessionStatus.completed:
-        return 'Đã hoàn thành';
+        return tr('Đã hoàn thành');
       case SessionStatus.cancelled:
-        return 'Đã huỷ';
+        return tr('Đã huỷ');
     }
   }
 }

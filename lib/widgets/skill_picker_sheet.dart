@@ -1,21 +1,22 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 
 import '../models/skill.dart';
 import '../theme/app_theme.dart';
+import '../l10n/app_text.dart';
 
 /// Bottom sheet chọn nhiều kỹ năng, dùng lại cho onboarding và chỉnh sửa hồ sơ.
 class SkillPickerSheet extends StatefulWidget {
   final String title;
   final String subtitle;
   final Set<String> initial;
-  final Color tone;
+  final Color? tone;
 
   const SkillPickerSheet({
     super.key,
     required this.title,
     required this.initial,
     this.subtitle = 'Chọn một hoặc nhiều kỹ năng',
-    this.tone = AppColors.primary,
+    this.tone,
   });
 
   static Future<Set<String>?> show(
@@ -23,7 +24,7 @@ class SkillPickerSheet extends StatefulWidget {
     required String title,
     required Set<String> initial,
     String subtitle = 'Chọn một hoặc nhiều kỹ năng',
-    Color tone = AppColors.primary,
+    Color? tone,
   }) {
     return showModalBottomSheet<Set<String>>(
       context: context,
@@ -56,6 +57,7 @@ class _SkillPickerSheetState extends State<SkillPickerSheet> {
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.sizeOf(context).height * 0.86;
+    final tone = widget.tone ?? AppColors.primary;
     final query = _search.trim().toLowerCase();
 
     return SizedBox(
@@ -73,7 +75,7 @@ class _SkillPickerSheetState extends State<SkillPickerSheet> {
                     children: [
                       Text(
                         widget.title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w800,
                           color: AppColors.ink,
@@ -81,8 +83,8 @@ class _SkillPickerSheetState extends State<SkillPickerSheet> {
                       ),
                       const SizedBox(height: 2),
                       Text(
-                        widget.subtitle,
-                        style: const TextStyle(
+                        tr(widget.subtitle),
+                        style: TextStyle(
                           fontSize: 11.5,
                           color: AppColors.muted,
                         ),
@@ -96,15 +98,18 @@ class _SkillPickerSheetState extends State<SkillPickerSheet> {
                     vertical: 5,
                   ),
                   decoration: BoxDecoration(
-                    color: widget.tone.withValues(alpha: 0.1),
+                    color: tone.withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(999),
                   ),
                   child: Text(
-                    '${_selected.length} đã chọn',
+                    trArgs(
+                      '{count} đã chọn',
+                      {'count': '${_selected.length}'},
+                    ),
                     style: TextStyle(
                       fontSize: 10.5,
                       fontWeight: FontWeight.w700,
-                      color: widget.tone,
+                      color: tone,
                     ),
                   ),
                 ),
@@ -114,8 +119,8 @@ class _SkillPickerSheetState extends State<SkillPickerSheet> {
             TextField(
               controller: _searchController,
               onChanged: (value) => setState(() => _search = value),
-              decoration: const InputDecoration(
-                hintText: 'Tìm kỹ năng...',
+              decoration: InputDecoration(
+                hintText: tr('Tìm kỹ năng...'),
                 prefixIcon: Icon(Icons.search_rounded, size: 19),
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: 14, vertical: 11),
@@ -139,7 +144,7 @@ class _SkillPickerSheetState extends State<SkillPickerSheet> {
                       children: [
                         Text(
                           category,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 11.5,
                             fontWeight: FontWeight.w800,
                             color: AppColors.muted,
@@ -159,7 +164,7 @@ class _SkillPickerSheetState extends State<SkillPickerSheet> {
                                 style: const TextStyle(fontSize: 12),
                               ),
                               label: Text(skill.name),
-                              selectedColor: widget.tone,
+                              selectedColor: tone,
                               labelStyle: TextStyle(
                                 fontSize: 11.5,
                                 fontWeight: FontWeight.w600,
@@ -190,11 +195,16 @@ class _SkillPickerSheetState extends State<SkillPickerSheet> {
                 width: double.infinity,
                 child: FilledButton(
                   style: FilledButton.styleFrom(
-                    backgroundColor: widget.tone,
+                    backgroundColor: tone,
                   ),
                   onPressed: () =>
                       Navigator.of(context).pop(Set<String>.from(_selected)),
-                  child: Text('Lưu ${_selected.length} kỹ năng'),
+                  child: Text(
+                    trArgs(
+                      'Lưu {count} kỹ năng',
+                      {'count': '${_selected.length}'},
+                    ),
+                  ),
                 ),
               ),
             ),

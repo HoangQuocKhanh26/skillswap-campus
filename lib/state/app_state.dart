@@ -1,9 +1,12 @@
-import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 
+import '../l10n/app_text.dart';
 import '../models/swap_request.dart';
 import '../models/user.dart';
 import '../services/matching_service.dart';
 import '../services/sample_data.dart';
+import '../theme/app_theme.dart';
+import 'settings_store.dart';
 
 /// Một buổi học kèm thông tin lời mời và đối phương để hiển thị trong lịch.
 class SessionEntry {
@@ -20,10 +23,21 @@ class SessionEntry {
 
 /// Nguồn dữ liệu duy nhất (in-memory) cho toàn bộ app demo.
 class AppState extends ChangeNotifier {
-  AppState({DateTime Function()? clock}) : _clock = clock ?? DateTime.now;
+  AppState({
+    DateTime Function()? clock,
+    String languageCode = 'vi',
+    bool isDark = false,
+  })  : _clock = clock ?? DateTime.now,
+        _languageCode = languageCode == 'en' ? 'en' : 'vi',
+        _isDark = isDark {
+    _applySettings();
+  }
 
   final DateTime Function() _clock;
   final MatchingService _matchingService = const MatchingService();
+
+  String _languageCode;
+  bool _isDark;
 
   User? _currentUser;
   List<User> _users = [];
@@ -31,6 +45,49 @@ class AppState extends ChangeNotifier {
   final Set<String> _skippedUserIds = {};
 
   DateTime get now => _clock();
+  String get languageCode => _languageCode;
+  bool get isDark => _isDark;
+  bool get isEnglish => _languageCode == 'en';
+
+  /// Đồng bộ bảng màu và bộ dịch toàn cục với cài đặt hiện tại.
+  void _applySettings() {
+    AppText.language = _languageCode;
+    AppColors.palette = _isDark ? AppPalette.dark : AppPalette.light;
+  }
+
+  void setLanguage(String languageCode) {
+    final next = languageCode == 'en' ? 'en' : 'vi';
+    if (next == _languageCode) return;
+    _languageCode = next;
+    _applySettings();
+    _refreshEverything();
+    SettingsStore.saveLanguage(next);
+  }
+
+  void setDarkMode(bool isDark) {
+    if (isDark == _isDark) return;
+    _isDark = isDark;
+    _applySettings();
+    _refreshEverything();
+    SettingsStore.saveDarkMode(isDark);
+  }
+
+  /// Màu và chuỗi dịch được đọc từ biến tĩnh chứ không qua `Theme.of`, nên các
+  /// widget `const` sẽ không tự rebuild. Đánh dấu toàn bộ cây element một lần
+  /// để mọi màn hình vẽ lại ngay khi đổi ngôn ngữ hoặc giao diện.
+  void _refreshEverything() {
+    notifyListeners();
+    final root = WidgetsBinding.instance.rootElement;
+    if (root == null) return;
+
+    void markDirty(Element element) {
+      element.markNeedsBuild();
+      element.visitChildren(markDirty);
+    }
+
+    markDirty(root);
+  }
+
   User? get currentUser => _currentUser;
   bool get isLoggedIn => _currentUser != null;
   List<User> get users => List.unmodifiable(_users);
@@ -303,11 +360,21 @@ class AppState extends ChangeNotifier {
     if (me == null) return null;
     if (hasOpenRequestWith(target.id)) return null;
 
-    final defaultMessage =
-        'Chào ${target.name.split(' ').last}, mình thấy chúng ta có thể trao đổi kỹ năng. '
-        'Mình có thể dạy ${me.teachingSkills.isEmpty ? 'kỹ năng của mình' : me.teachingSkills.first.name}, '
-        'học lại ${me.learningSkills.isEmpty ? 'điều bạn đang có' : me.learningSkills.first.name}. '
-        'Bạn thấy thế nào?';
+    final teach = me.teachingSkills.isEmpty
+        ? tr('kỹ năng của mình')
+        : me.teachingSkills.first.name;
+    final learn = me.learningSkills.isEmpty
+        ? tr('điều bạn đang có')
+        : me.learningSkills.first.name;
+
+    final defaultMessage = trArgs(
+      'Chào {name}, mình thấy chúng ta có thể trao đổi kỹ năng. Mình có thể dạy {teach}, học lại {learn}. Bạn thấy thế nào?',
+      {
+        'name': target.name.split(' ').last,
+        'teach': teach,
+        'learn': learn,
+      },
+    );
 
     final request = SwapRequest(
       id: 'req-${now.microsecondsSinceEpoch}',
@@ -371,7 +438,8 @@ class AppState extends ChangeNotifier {
     _requests[index] = request.copyWith(
       status: SwapStatus.cancelled,
       sessions: sessions,
-      cancelReason: reason ?? 'Đã huỷ bởi ${_me.name}',
+      cancelReason: reason ??
+          trArgs('Đã huỷ bởi {name}', {'name': _me.name}),
     );
     notifyListeners();
     return true;
@@ -477,7 +545,7 @@ class AppState extends ChangeNotifier {
     final partner = userById(partnerId);
     final rating = partner.rating >= 4.8 ? 5 : 4;
     final taught = _me.teachingSkills.isEmpty
-        ? 'buổi học'
+        ? tr('buổi học')
         : _me.teachingSkills.first.name;
     return Review(
       id: '${request.id}-review-$partnerId',
@@ -487,8 +555,14 @@ class AppState extends ChangeNotifier {
       toUserId: _me.id,
       rating: rating,
       comment: rating == 5
-          ? 'Buổi trao đổi rất chất lượng! ${_me.name} giải thích $taught rõ ràng, đúng giờ và chuẩn bị tốt.'
-          : 'Buổi học ổn, ${_me.name} giải thích dễ hiểu. Lần sau mình muốn có thêm bài tập thực hành.',
+          ? trArgs(
+              'Buổi trao đổi rất chất lượng! {name} giải thích {skill} rõ ràng, đúng giờ và chuẩn bị tốt.',
+              {'name': _me.name, 'skill': taught},
+            )
+          : trArgs(
+              'Buổi học ổn, {name} giải thích dễ hiểu. Lần sau mình muốn có thêm bài tập thực hành.',
+              {'name': _me.name},
+            ),
       tags: rating == 5
           ? const ['Đúng giờ', 'Giải thích dễ hiểu', 'Thân thiện']
           : const ['Giải thích dễ hiểu'],

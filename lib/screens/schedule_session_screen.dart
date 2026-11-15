@@ -5,6 +5,7 @@ import '../state/app_scope.dart';
 import '../theme/app_theme.dart';
 import '../utils/formatters.dart';
 import '../widgets/user_avatar.dart';
+import '../l10n/app_text.dart';
 
 class ScheduleSessionScreen extends StatefulWidget {
   final SwapRequest request;
@@ -26,12 +27,12 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
   late final TextEditingController _noteController;
 
   static const List<int> _durations = [30, 45, 60, 90, 120];
-  static const List<String> _offlinePlaces = [
-    'Thư viện tầng 3 · Bàn 12',
-    'Thư viện tầng 2 · Phòng học nhóm 4',
-    'Căng tin A · Khu ngoài trời',
-    'Phòng học B2-201',
-  ];
+  static List<String> get _offlinePlaces => [
+        tr('Thư viện tầng 3 · Bàn 12'),
+        tr('Thư viện tầng 2 · Phòng học nhóm 4'),
+        tr('Căng tin A · Khu ngoài trời'),
+        tr('Phòng học B2-201'),
+      ];
 
   SwapSession? get _existing {
     if (widget.request.sessions.isEmpty) return null;
@@ -90,9 +91,9 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
       initialDate: _startTime,
       firstDate: DateTime(now.year, now.month, now.day),
       lastDate: DateTime(now.year, now.month, now.day + 60),
-      helpText: 'Chọn ngày học',
-      cancelText: 'Huỷ',
-      confirmText: 'Chọn ngày',
+      helpText: tr('Chọn ngày học'),
+      cancelText: tr('Huỷ'),
+      confirmText: tr('Chọn ngày'),
     );
     if (picked != null) {
       setState(() {
@@ -111,9 +112,9 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
     final picked = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.fromDateTime(_startTime),
-      helpText: 'Chọn giờ bắt đầu',
-      cancelText: 'Huỷ',
-      confirmText: 'Chọn giờ',
+      helpText: tr('Chọn giờ bắt đầu'),
+      cancelText: tr('Huỷ'),
+      confirmText: tr('Chọn giờ'),
     );
     if (picked != null) {
       setState(() {
@@ -148,15 +149,15 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
     final location = _locationController.text.trim();
 
     if (_startTime.isBefore(DateTime.now().add(const Duration(minutes: 15)))) {
-      _showError('Chọn thời gian sau ít nhất 15 phút nữa nhé.');
+      _showError(tr('Chọn thời gian sau ít nhất 15 phút nữa nhé.'));
       return;
     }
     if (location.isEmpty) {
-      _showError('Nhập địa điểm hoặc link học trực tuyến.');
+      _showError(tr('Nhập địa điểm hoặc link học trực tuyến.'));
       return;
     }
     if (_overlapsExisting()) {
-      _showError('Bạn đã có một buổi học khác trùng khung giờ này.');
+      _showError(tr('Bạn đã có một buổi học khác trùng khung giờ này.'));
       return;
     }
 
@@ -208,7 +209,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(isReschedule ? 'Đổi lịch học' : 'Chọn lịch học'),
+        title: Text(isReschedule ? tr('Đổi lịch học') : tr('Chọn lịch học')),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
@@ -218,7 +219,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
             Container(
               padding: const EdgeInsets.all(14),
               decoration: BoxDecoration(
-                gradient: const LinearGradient(
+                gradient: LinearGradient(
                   colors: [AppColors.primary, Color(0xFF6D28D9)],
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
@@ -263,8 +264,11 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
                     ),
                     child: Text(
                       isReschedule
-                          ? 'Đổi lịch lần ${existing.rescheduleCount + 1}'
-                          : 'Đã ghép đôi',
+                          ? trArgs(
+                              'Đổi lịch lần {count}',
+                              {'count': '${existing.rescheduleCount + 1}'},
+                            )
+                          : tr('Đã ghép đôi'),
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 9.5,
@@ -277,7 +281,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
             ),
             const SizedBox(height: 18),
             _FormCard(
-              title: 'Thời gian',
+              title: tr('Thời gian'),
               icon: Icons.schedule_rounded,
               child: Column(
                 children: [
@@ -285,7 +289,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
                     children: [
                       Expanded(
                         child: _PickerTile(
-                          label: 'Ngày học',
+                          label: tr('Ngày học'),
                           value: friendlyDay(_startTime, DateTime.now()),
                           icon: Icons.calendar_today_rounded,
                           onTap: _pickDate,
@@ -294,7 +298,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
                       const SizedBox(width: 10),
                       Expanded(
                         child: _PickerTile(
-                          label: 'Bắt đầu',
+                          label: tr('Bắt đầu'),
                           value: formatTime(_startTime),
                           icon: Icons.access_time_rounded,
                           onTap: _pickTime,
@@ -305,8 +309,8 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
                   const SizedBox(height: 14),
                   Row(
                     children: [
-                      const Text(
-                        'Thời lượng',
+                      Text(
+                        tr('Thời lượng'),
                         style: TextStyle(
                           fontSize: 11.5,
                           fontWeight: FontWeight.w700,
@@ -315,8 +319,17 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
                       ),
                       const Spacer(),
                       Text(
-                        'Kết thúc ${formatTime(_startTime.add(Duration(minutes: _duration)))}',
-                        style: const TextStyle(
+                        trArgs(
+                          'Kết thúc {time}',
+                          {
+                            'time': formatTime(
+                              _startTime.add(
+                                Duration(minutes: _duration),
+                              ),
+                            ),
+                          },
+                        ),
+                        style: TextStyle(
                           fontSize: 10.5,
                           color: AppColors.muted,
                         ),
@@ -342,7 +355,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
             ),
             const SizedBox(height: 12),
             _FormCard(
-              title: 'Hình thức & địa điểm',
+              title: tr('Hình thức & địa điểm'),
               icon: Icons.place_rounded,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -350,16 +363,16 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: SegmentedButton<SessionMode>(
-                      segments: const [
+                      segments: [
                         ButtonSegment(
                           value: SessionMode.offline,
                           icon: Icon(Icons.location_on_outlined, size: 16),
-                          label: Text('Trực tiếp'),
+                          label: Text(tr('Trực tiếp')),
                         ),
                         ButtonSegment(
                           value: SessionMode.online,
                           icon: Icon(Icons.videocam_outlined, size: 16),
-                          label: Text('Trực tuyến'),
+                          label: Text(tr('Trực tuyến')),
                         ),
                       ],
                       selected: {_mode},
@@ -380,8 +393,8 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
                     textCapitalization: TextCapitalization.sentences,
                     decoration: InputDecoration(
                       labelText: _mode == SessionMode.online
-                          ? 'Link phòng học'
-                          : 'Địa điểm',
+                          ? tr('Link phòng học')
+                          : tr('Địa điểm'),
                       prefixIcon: Icon(
                         _mode == SessionMode.online
                             ? Icons.link_rounded
@@ -415,16 +428,16 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
             ),
             const SizedBox(height: 12),
             _FormCard(
-              title: 'Ghi chú cho buổi học',
+              title: tr('Ghi chú cho buổi học'),
               icon: Icons.edit_note_rounded,
               child: TextField(
                 controller: _noteController,
                 maxLines: 3,
                 maxLength: 180,
                 textCapitalization: TextCapitalization.sentences,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   hintText:
-                      'Ví dụ: mang laptop, chuẩn bị file thiết kế, học phần 1 về Java...',
+                      tr('Ví dụ: mang laptop, chuẩn bị file thiết kế, học phần 1 về Java...'),
                   alignLabelWithHint: true,
                 ),
               ),
@@ -437,7 +450,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
                   color: AppColors.accentSoft,
                   borderRadius: BorderRadius.circular(16),
                 ),
-                child: const Row(
+                child: Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Icon(
@@ -448,8 +461,8 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
                     SizedBox(width: 8),
                     Expanded(
                       child: Text(
-                        'Đổi lịch sẽ gửi thông báo mới cho đối phương (demo). '
-                        'Lịch cũ vẫn được lưu trong lịch sử đổi lịch.',
+                        tr('Đổi lịch sẽ gửi thông báo mới cho đối phương (demo). '
+                        'Lịch cũ vẫn được lưu trong lịch sử đổi lịch.'),
                         style: TextStyle(
                           fontSize: 11,
                           height: 1.45,
@@ -463,7 +476,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
             ],
             const SizedBox(height: 12),
             Text(
-              'Lịch học sẽ xuất hiện trong tab Lịch hẹn của cả hai sinh viên.',
+              tr('Lịch học sẽ xuất hiện trong tab Lịch hẹn của cả hai sinh viên.'),
               style: TextStyle(
                 fontSize: 10.5,
                 color: AppColors.muted.withValues(alpha: 0.9),
@@ -476,7 +489,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
         top: false,
         child: Container(
           padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-          decoration: const BoxDecoration(
+          decoration: BoxDecoration(
             color: AppColors.surface,
             border: Border(top: BorderSide(color: AppColors.border)),
           ),
@@ -486,7 +499,7 @@ class _ScheduleSessionScreenState extends State<ScheduleSessionScreen> {
               isReschedule ? Icons.update_rounded : Icons.event_available_rounded,
               size: 19,
             ),
-            label: Text(isReschedule ? 'Xác nhận đổi lịch' : 'Lưu lịch học'),
+            label: Text(isReschedule ? tr('Xác nhận đổi lịch') : tr('Lưu lịch học')),
           ),
         ),
       ),
@@ -523,7 +536,7 @@ class _FormCard extends StatelessWidget {
               const SizedBox(width: 6),
               Text(
                 title,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w800,
                   color: AppColors.ink,
@@ -573,7 +586,7 @@ class _PickerTile extends StatelessWidget {
                 const SizedBox(width: 5),
                 Text(
                   label,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 10,
                     fontWeight: FontWeight.w600,
                     color: AppColors.muted,
@@ -587,14 +600,14 @@ class _PickerTile extends StatelessWidget {
                 Expanded(
                   child: Text(
                     value,
-                    style: const TextStyle(
+                    style: TextStyle(
                       fontSize: 13,
                       fontWeight: FontWeight.w800,
                       color: AppColors.ink,
                     ),
                   ),
                 ),
-                const Icon(
+                Icon(
                   Icons.keyboard_arrow_down_rounded,
                   size: 17,
                   color: AppColors.muted,

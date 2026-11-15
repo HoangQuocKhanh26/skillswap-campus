@@ -1,141 +1,245 @@
 import 'package:flutter/material.dart';
 
+/// Bảng màu cho một chế độ giao diện (sáng hoặc tối).
+class AppPalette {
+  final Color primary;
+  final Color primaryDark;
+  final Color primarySoft;
+  final Color secondary;
+  final Color secondarySoft;
+  final Color accent;
+  final Color accentSoft;
+  final Color background;
+  final Color surface;
+  final Color ink;
+  final Color muted;
+  final Color border;
+  final Color success;
+  final Color danger;
+  final Color info;
+  final Color slate;
+  final List<Color> brandGradient;
+  final List<Color> heroGradient;
+
+  const AppPalette({
+    required this.primary,
+    required this.primaryDark,
+    required this.primarySoft,
+    required this.secondary,
+    required this.secondarySoft,
+    required this.accent,
+    required this.accentSoft,
+    required this.background,
+    required this.surface,
+    required this.ink,
+    required this.muted,
+    required this.border,
+    required this.success,
+    required this.danger,
+    required this.info,
+    required this.slate,
+    required this.brandGradient,
+    required this.heroGradient,
+  });
+
+  static const AppPalette light = AppPalette(
+    primary: Color(0xFF4F46E5),
+    primaryDark: Color(0xFF3730A3),
+    primarySoft: Color(0xFFEEF0FF),
+    secondary: Color(0xFF0D9488),
+    secondarySoft: Color(0xFFE7F8F5),
+    accent: Color(0xFFF59E0B),
+    accentSoft: Color(0xFFFFF5E6),
+    background: Color(0xFFF6F6FB),
+    surface: Colors.white,
+    ink: Color(0xFF191833),
+    muted: Color(0xFF6E6B86),
+    border: Color(0xFFE9E7F3),
+    success: Color(0xFF10B981),
+    danger: Color(0xFFEF4444),
+    info: Color(0xFF3B82F6),
+    slate: Color(0xFF94A3B8),
+    brandGradient: [
+      Color(0xFF4F46E5),
+      Color(0xFF7C3AED),
+      Color(0xFF0D9488),
+    ],
+    heroGradient: [
+      Color(0xFF4F46E5),
+      Color(0xFF6D28D9),
+    ],
+  );
+
+  static const AppPalette dark = AppPalette(
+    primary: Color(0xFF9B8CFF),
+    primaryDark: Color(0xFF7C6BFF),
+    primarySoft: Color(0xFF2A2A4A),
+    secondary: Color(0xFF2DD4BF),
+    secondarySoft: Color(0xFF123B37),
+    accent: Color(0xFFFBBF24),
+    accentSoft: Color(0xFF3A2C12),
+    background: Color(0xFF0F111A),
+    surface: Color(0xFF181B2A),
+    ink: Color(0xFFF3F1FB),
+    muted: Color(0xFFA9A5C0),
+    border: Color(0xFF2B2F45),
+    success: Color(0xFF34D399),
+    danger: Color(0xFFF87171),
+    info: Color(0xFF60A5FA),
+    slate: Color(0xFF8E93A8),
+    brandGradient: [
+      Color(0xFF6D5EF8),
+      Color(0xFF8B5CF6),
+      Color(0xFF14B8A6),
+    ],
+    heroGradient: [
+      Color(0xFF5B4BE0),
+      Color(0xFF7C3AED),
+    ],
+  );
+}
+
+/// Màu đang dùng. Đổi [palette] khi chuyển sáng/tối.
 class AppColors {
   AppColors._();
 
-  static const Color primary = Color(0xFF4F46E5);
-  static const Color primaryDark = Color(0xFF3730A3);
-  static const Color primarySoft = Color(0xFFEEF0FF);
-  static const Color secondary = Color(0xFF0D9488);
-  static const Color secondarySoft = Color(0xFFE7F8F5);
-  static const Color accent = Color(0xFFF59E0B);
-  static const Color accentSoft = Color(0xFFFFF5E6);
-  static const Color background = Color(0xFFF6F6FB);
-  static const Color surface = Colors.white;
-  static const Color ink = Color(0xFF191833);
-  static const Color muted = Color(0xFF6E6B86);
-  static const Color border = Color(0xFFE9E7F3);
-  static const Color success = Color(0xFF10B981);
-  static const Color danger = Color(0xFFEF4444);
-  static const Color info = Color(0xFF3B82F6);
-  static const Color slate = Color(0xFF94A3B8);
+  static AppPalette palette = AppPalette.light;
 
-  static const List<Color> brandGradient = [
-    Color(0xFF4F46E5),
-    Color(0xFF7C3AED),
-    Color(0xFF0D9488),
-  ];
+  static Color get primary => palette.primary;
+  static Color get primaryDark => palette.primaryDark;
+  static Color get primarySoft => palette.primarySoft;
+  static Color get secondary => palette.secondary;
+  static Color get secondarySoft => palette.secondarySoft;
+  static Color get accent => palette.accent;
+  static Color get accentSoft => palette.accentSoft;
+  static Color get background => palette.background;
+  static Color get surface => palette.surface;
+  static Color get ink => palette.ink;
+  static Color get muted => palette.muted;
+  static Color get border => palette.border;
+  static Color get success => palette.success;
+  static Color get danger => palette.danger;
+  static Color get info => palette.info;
+  static Color get slate => palette.slate;
 
-  static const List<Color> heroGradient = [
-    Color(0xFF4F46E5),
-    Color(0xFF6D28D9),
-  ];
+  static List<Color> get brandGradient => palette.brandGradient;
+  static List<Color> get heroGradient => palette.heroGradient;
 }
 
 class AppTheme {
   AppTheme._();
 
-  static ThemeData light() {
+  static ThemeData light() => build(AppPalette.light, Brightness.light);
+
+  static ThemeData dark() => build(AppPalette.dark, Brightness.dark);
+
+  static ThemeData build(AppPalette p, Brightness brightness) {
     final scheme = ColorScheme.fromSeed(
-      seedColor: AppColors.primary,
-      brightness: Brightness.light,
+      seedColor: p.primary,
+      brightness: brightness,
     ).copyWith(
-      primary: AppColors.primary,
-      secondary: AppColors.secondary,
-      tertiary: AppColors.accent,
-      surface: AppColors.surface,
-      error: AppColors.danger,
+      primary: p.primary,
+      secondary: p.secondary,
+      tertiary: p.accent,
+      surface: p.surface,
+      onSurface: p.ink,
+      onSurfaceVariant: p.muted,
+      outline: p.border,
+      error: p.danger,
     );
 
     final base = ThemeData(
       useMaterial3: true,
+      brightness: brightness,
       colorScheme: scheme,
-      scaffoldBackgroundColor: AppColors.background,
+      scaffoldBackgroundColor: p.background,
     );
+
+    final snackBackground = brightness == Brightness.dark ? p.surface : p.ink;
 
     return base.copyWith(
       textTheme: base.textTheme.apply(
-        bodyColor: AppColors.ink,
-        displayColor: AppColors.ink,
+        bodyColor: p.ink,
+        displayColor: p.ink,
       ),
-      appBarTheme: const AppBarTheme(
-        backgroundColor: AppColors.background,
+      appBarTheme: AppBarTheme(
+        backgroundColor: p.background,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         centerTitle: false,
         scrolledUnderElevation: 0,
-        iconTheme: IconThemeData(color: AppColors.ink),
+        iconTheme: IconThemeData(color: p.ink),
         titleTextStyle: TextStyle(
-          color: AppColors.ink,
+          color: p.ink,
           fontSize: 20,
           fontWeight: FontWeight.w800,
           letterSpacing: -0.4,
         ),
       ),
       navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: AppColors.surface,
+        backgroundColor: p.surface,
         elevation: 0,
         height: 68,
-        indicatorColor: AppColors.primarySoft,
+        indicatorColor: p.primarySoft,
         labelBehavior: NavigationDestinationLabelBehavior.alwaysShow,
         labelTextStyle: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
           return TextStyle(
             fontSize: 11.5,
             fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-            color: selected ? AppColors.primary : AppColors.muted,
+            color: selected ? p.primary : p.muted,
           );
         }),
         iconTheme: WidgetStateProperty.resolveWith((states) {
           final selected = states.contains(WidgetState.selected);
           return IconThemeData(
             size: 23,
-            color: selected ? AppColors.primary : AppColors.muted,
+            color: selected ? p.primary : p.muted,
           );
         }),
       ),
       cardTheme: CardThemeData(
-        color: AppColors.surface,
+        color: p.surface,
         surfaceTintColor: Colors.transparent,
         elevation: 0,
         margin: EdgeInsets.zero,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
-          side: const BorderSide(color: AppColors.border),
+          side: BorderSide(color: p.border),
         ),
       ),
-      dividerTheme: const DividerThemeData(
-        color: AppColors.border,
+      dividerTheme: DividerThemeData(
+        color: p.border,
         thickness: 1,
         space: 1,
       ),
       inputDecorationTheme: InputDecorationTheme(
         filled: true,
-        fillColor: AppColors.surface,
+        fillColor: p.surface,
         contentPadding:
             const EdgeInsets.symmetric(horizontal: 16, vertical: 15),
-        hintStyle: const TextStyle(color: AppColors.slate, fontSize: 14.5),
-        labelStyle: const TextStyle(color: AppColors.muted),
+        hintStyle: TextStyle(color: p.slate, fontSize: 14.5),
+        labelStyle: TextStyle(color: p.muted),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: p.border),
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.border),
+          borderSide: BorderSide(color: p.border),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.primary, width: 1.6),
+          borderSide: BorderSide(color: p.primary, width: 1.6),
         ),
         errorBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(color: AppColors.danger),
+          borderSide: BorderSide(color: p.danger),
         ),
       ),
       filledButtonTheme: FilledButtonThemeData(
         style: FilledButton.styleFrom(
-          backgroundColor: AppColors.primary,
+          backgroundColor: p.primary,
           foregroundColor: Colors.white,
           minimumSize: const Size(0, 50),
           padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -150,14 +254,14 @@ class AppTheme {
       ),
       outlinedButtonTheme: OutlinedButtonThemeData(
         style: OutlinedButton.styleFrom(
-          foregroundColor: AppColors.primary,
+          foregroundColor: p.primary,
           minimumSize: const Size(0, 50),
           padding: const EdgeInsets.symmetric(horizontal: 18),
           textStyle: const TextStyle(
             fontSize: 14.5,
             fontWeight: FontWeight.w700,
           ),
-          side: const BorderSide(color: AppColors.border, width: 1.4),
+          side: BorderSide(color: p.border, width: 1.4),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(14),
           ),
@@ -165,7 +269,7 @@ class AppTheme {
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
-          foregroundColor: AppColors.primary,
+          foregroundColor: p.primary,
           textStyle: const TextStyle(
             fontSize: 14.5,
             fontWeight: FontWeight.w700,
@@ -173,15 +277,15 @@ class AppTheme {
         ),
       ),
       chipTheme: base.chipTheme.copyWith(
-        backgroundColor: AppColors.surface,
-        selectedColor: AppColors.primary,
-        disabledColor: AppColors.primarySoft,
-        side: const BorderSide(color: AppColors.border),
+        backgroundColor: p.surface,
+        selectedColor: p.primary,
+        disabledColor: p.primarySoft,
+        side: BorderSide(color: p.border),
         shape: const StadiumBorder(),
-        labelStyle: const TextStyle(
+        labelStyle: TextStyle(
           fontSize: 13,
           fontWeight: FontWeight.w600,
-          color: AppColors.ink,
+          color: p.ink,
         ),
         secondaryLabelStyle: const TextStyle(
           fontSize: 13,
@@ -190,18 +294,18 @@ class AppTheme {
         ),
         padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 7),
       ),
-      tabBarTheme: const TabBarThemeData(
-        labelColor: AppColors.primary,
-        unselectedLabelColor: AppColors.muted,
-        indicatorColor: AppColors.primary,
+      tabBarTheme: TabBarThemeData(
+        labelColor: p.primary,
+        unselectedLabelColor: p.muted,
+        indicatorColor: p.primary,
         indicatorSize: TabBarIndicatorSize.label,
-        dividerColor: AppColors.border,
-        labelStyle: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+        dividerColor: p.border,
+        labelStyle: const TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
         unselectedLabelStyle:
-            TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+            const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
       ),
       snackBarTheme: SnackBarThemeData(
-        backgroundColor: AppColors.ink,
+        backgroundColor: snackBackground,
         contentTextStyle: const TextStyle(
           color: Colors.white,
           fontSize: 14,
@@ -213,34 +317,34 @@ class AppTheme {
         ),
         insetPadding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
       ),
-      bottomSheetTheme: const BottomSheetThemeData(
-        backgroundColor: AppColors.surface,
+      bottomSheetTheme: BottomSheetThemeData(
+        backgroundColor: p.surface,
         surfaceTintColor: Colors.transparent,
         showDragHandle: true,
-        dragHandleColor: AppColors.border,
-        shape: RoundedRectangleBorder(
+        dragHandleColor: p.border,
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
         ),
       ),
       dialogTheme: DialogThemeData(
-        backgroundColor: AppColors.surface,
+        backgroundColor: p.surface,
         surfaceTintColor: Colors.transparent,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
-        titleTextStyle: const TextStyle(
+        titleTextStyle: TextStyle(
           fontSize: 19,
           fontWeight: FontWeight.w800,
-          color: AppColors.ink,
+          color: p.ink,
         ),
-        contentTextStyle: const TextStyle(
+        contentTextStyle: TextStyle(
           fontSize: 14.5,
           height: 1.5,
-          color: AppColors.muted,
+          color: p.muted,
         ),
       ),
       searchBarTheme: SearchBarThemeData(
-        backgroundColor: WidgetStateProperty.all(AppColors.surface),
+        backgroundColor: WidgetStateProperty.all(p.surface),
         surfaceTintColor: WidgetStateProperty.all(Colors.transparent),
         elevation: WidgetStateProperty.all(0),
         constraints: const BoxConstraints(minHeight: 50),
@@ -250,14 +354,14 @@ class AppTheme {
         shape: WidgetStateProperty.all(
           RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16),
-            side: const BorderSide(color: AppColors.border),
+            side: BorderSide(color: p.border),
           ),
         ),
         hintStyle: WidgetStateProperty.all(
-          const TextStyle(color: AppColors.slate, fontSize: 14.5),
+          TextStyle(color: p.slate, fontSize: 14.5),
         ),
         textStyle: WidgetStateProperty.all(
-          const TextStyle(color: AppColors.ink, fontSize: 14.5),
+          TextStyle(color: p.ink, fontSize: 14.5),
         ),
       ),
     );

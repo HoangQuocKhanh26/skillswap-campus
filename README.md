@@ -54,6 +54,12 @@ Mỗi sinh viên vừa là người dạy, vừa là người học. Ứng dụn
 - Chấm điểm sao, chọn nhãn nhận xét, viết cảm nhận.
 - Điểm trung bình của mỗi người được cập nhật sau khi nhận đánh giá.
 
+### Cài đặt
+- **Ngôn ngữ Việt / Anh**: đổi ngay trong app, áp dụng cho toàn bộ giao diện, ngày giờ và các nhãn đánh giá.
+- **Giao diện sáng / tối**: chọn trực tiếp bằng hai thẻ xem trước, có bảng màu riêng cho từng chế độ.
+- Cài đặt được lưu bằng `shared_preferences`, giữ nguyên sau khi mở lại app.
+- **Nhóm 12**: màn thông tin nhóm phát triển (vai trò, đầu việc, tỉ lệ đóng góp) và thông tin dự án, kèm liên kết mã nguồn.
+
 ---
 
 ## 3. Widget đặc trưng theo yêu cầu môn học
@@ -65,7 +71,7 @@ Mỗi sinh viên vừa là người dạy, vừa là người học. Ứng dụn
 | **TabBar** | `user_detail_screen.dart` (Kỹ năng / Đánh giá), `requests_screen.dart` (3 tab), `schedule_screen.dart` (2 tab), `profile_screen.dart` (2 tab) |
 | **RatingBar** | `widgets/rating_bar.dart`, dùng trong `widgets/review_sheet.dart` và phần hiển thị đánh giá |
 
-Ngoài ra còn có: `NavigationBar`, `InheritedNotifier`, `AnimatedBuilder`, `PageView`, `BottomSheet`, `showDatePicker`/`showTimePicker` có bản địa hóa tiếng Việt.
+Ngoài ra còn có: `NavigationBar`, `InheritedNotifier`, `AnimatedBuilder`, `ListenableBuilder` (đổi ngôn ngữ/giao diện), `AnimatedContainer` + `LinearProgressIndicator` (màn Cài đặt/Nhóm 12), `PageView`, `BottomSheet`, `showDatePicker`/`showTimePicker` có bản địa hóa theo ngôn ngữ đang chọn.
 
 ---
 
@@ -79,6 +85,7 @@ Ngoài ra còn có: `NavigationBar`, `InheritedNotifier`, `AnimatedBuilder`, `Pa
 6. **Hoàn thành & đánh giá**: tab *Đã xong* → buổi với **Phương Thảo** đang chờ mình đánh giá → *Đánh giá*, chấm sao, chọn nhãn và gửi. Hộp thoại cảm ơn hiển thị luôn đánh giá đối phương dành cho mình.
 7. **Nhánh từ chối / hết hạn**: tab *Yêu cầu* → *Nhận được* → từ chối lời mời của **Hoàng Nam**; mở *Lịch sử* để xem lời mời bị từ chối, đã hủy và đã hết hạn (Yến Nhi).
 8. **Hồ sơ**: tab *Hồ sơ* → xem thống kê, đánh giá đã nhận; thử *Chỉnh sửa hồ sơ* hoặc *Reset dữ liệu*.
+9. **Cài đặt**: tab *Hồ sơ* → biểu tượng bánh răng → đổi sang **English** để thấy toàn bộ giao diện dịch ngay; chọn giao diện **Tối**; mở **Nhóm phát triển** để xem Nhóm 12 và thông tin dự án.
 
 > Mẹo: nút *Demo: đồng ý* ở tab *Đã gửi* mô phỏng đối phương chấp nhận lời mời, dùng khi muốn trình diễn nhanh mà không chờ 48 giờ.
 > Khi tạo hồ sơ mới, nút *Dùng mẫu* điền sẵn một nhân vật khác (**Minh Thư**, K19, dạy Video Editing/Marketing/Photoshop) để bạn không phải gõ tay.
@@ -105,8 +112,10 @@ Ngoài ra còn có: `NavigationBar`, `InheritedNotifier`, `AnimatedBuilder`, `Pa
 
 ```
 lib/
-├── main.dart                 # entry point
-├── app.dart                  # MaterialApp, locale tiếng Việt, theme
+├── main.dart                 # entry point, nạp cài đặt đã lưu
+├── app.dart                  # MaterialApp, theme sáng/tối, locale vi/en
+├── l10n/
+│   └── app_text.dart         # từ điển Việt → Anh + tr()/trArgs()
 ├── models/
 │   ├── skill.dart            # Skill, danh mục kỹ năng
 │   ├── user.dart             # User, kỹ năng dạy/học, uy tín
@@ -116,7 +125,8 @@ lib/
 │   └── sample_data.dart      # 18 hồ sơ + 11 lời mời mẫu
 ├── state/
 │   ├── app_state.dart        # ChangeNotifier: dữ liệu, vòng đời, đánh giá
-│   └── app_scope.dart        # InheritedNotifier
+│   ├── app_scope.dart        # InheritedNotifier
+│   └── settings_store.dart   # lưu ngôn ngữ/giao diện bằng shared_preferences
 ├── screens/
 │   ├── login_screen.dart
 │   ├── profile_setup_screen.dart
@@ -127,15 +137,18 @@ lib/
 │   ├── schedule_screen.dart
 │   ├── schedule_session_screen.dart
 │   ├── profile_screen.dart
-│   └── edit_profile_screen.dart
+│   ├── edit_profile_screen.dart
+│   ├── settings_screen.dart  # ngôn ngữ, giao diện, lối vào Nhóm 12
+│   └── team_screen.dart      # thông tin Nhóm 12 và dự án
 ├── widgets/                  # avatar, chip, badge, rating, swipe card, sheet…
-├── theme/app_theme.dart
+├── theme/app_theme.dart      # AppPalette.light/dark + AppColors động
 └── utils/                    # formatters, action flows dùng chung
 
 assets/avatars/               # 19 ảnh đại diện sinh (ảnh giả lập)
 test/
 ├── app_state_test.dart       # vòng đời lời mời, hết hạn, đổi lịch, hủy, đánh giá
 ├── matching_service_test.dart
+├── settings_test.dart        # ngôn ngữ, giao diện tối, nội dung Nhóm 12
 └── widget_test.dart
 ```
 
@@ -143,6 +156,7 @@ test/
 - `AppState extends ChangeNotifier` giữ toàn bộ dữ liệu demo và các chuyển trạng thái.
 - `AppScope extends InheritedNotifier<AppState>` cung cấp state cho toàn cây widget, không cần package ngoài.
 - Hết hạn lời mời được tính **lazy** qua `statusOf()` và được áp dụng thật khi timer/pull-to-refresh gọi `expireOverdueRequests()`.
+- Ngôn ngữ và bảng màu là biến tĩnh (`AppText`, `AppColors`) nên khi đổi cài đặt, `AppState` gọi `_refreshEverything()` để đánh dấu rebuild toàn cây element — nhờ vậy cả widget `const` cũng cập nhật ngay.
 
 ---
 
@@ -181,21 +195,24 @@ flutter test
 ```
 
 - `flutter analyze`: không có issue.
-- `flutter test`: 14 test pass, bao gồm:
+- `flutter test`: 19 test pass, bao gồm:
   - tính điểm và ghép cặp hai chiều,
   - gửi/chấp nhận/từ chối lời mời,
   - hết hạn sau 48 giờ,
   - đặt lịch, đổi lịch, hủy lịch,
   - hoàn thành buổi học và đánh giá hai chiều,
-  - luồng đăng nhập demo ở mức widget.
+  - luồng đăng nhập demo ở mức widget,
+  - mặc định tiếng Việt/giao diện sáng, khởi động bằng tiếng Anh,
+  - đổi ngôn ngữ và giao diện tối ngay trong app,
+  - nội dung Nhóm 12 (thành viên, vai trò, tỉ lệ đóng góp).
 
 ---
 
 ## 8. Ghi chú triển khai
 
 - Ảnh đại diện được sinh cục bộ và đóng gói trong `assets/avatars/`, ứng dụng không gọi mạng.
-- Toàn bộ copy trong app là tiếng Việt; `flutter_localizations` bật locale `vi` cho date/time picker.
-- Dữ liệu chỉ nằm trong bộ nhớ: khởi động lại app sẽ trở về dữ liệu demo ban đầu. Tab *Hồ sơ* có nút **Reset dữ liệu** (hộp thoại “Đặt lại dữ liệu demo?”).
+- Giao diện mặc định là **tiếng Việt, nền sáng**; có thể đổi sang **English** và **giao diện tối** trong *Cài đặt*. Bản dịch dùng từ điển nội bộ (`lib/l10n/app_text.dart`), không cần file ARB; `flutter_localizations` đổi locale `vi`/`en` cho date/time picker.
+- Dữ liệu chỉ nằm trong bộ nhớ: khởi động lại app sẽ trở về dữ liệu demo ban đầu. Tab *Hồ sơ* có nút **Reset dữ liệu** (hộp thoại “Đặt lại dữ liệu demo?”). Riêng lựa chọn ngôn ngữ/giao diện được lưu bền bằng `shared_preferences`.
 - Các nút có nhãn *Demo* (ví dụ “Demo: đồng ý”, “Kết thúc”) dùng để trình diễn nhanh các nhánh vòng đời mà không cần chờ thời gian thật.
 
 ---
@@ -220,10 +237,10 @@ flutter test
 
 #### Hoàng Quốc Khánh — Nhóm trưởng — 40%
 
-- **Phụ trách:** phân tích yêu cầu, chốt phạm vi; thiết kế kiến trúc và state machine; matching; màn lời mời; màn lịch hẹn và form đặt lịch; tích hợp toàn bộ sản phẩm; quản lý Git/GitHub; viết README và kịch bản demo.
-- **Đầu việc:** mô hình `Skill`/`User`/`SwapRequest`/`SwapSession`/`Review`; `AppState` + `AppScope`; matching hai chiều; vòng đời accept/reject/expire/reschedule/cancel/complete/review; 3 tab *Nhận được / Đã gửi / Lịch sử*; màn *Lịch hẹn* (2 tab); form đặt lịch (ngày, giờ, thời lượng, hình thức, địa điểm, ghi chú); validate quá khứ 15 phút và trùng lịch; `HomeShell` + timer hết hạn; widget điểm phù hợp; hộp thoại dùng chung; review chéo và sửa lỗi cuối.
-- **File chính:** `lib/models/*`, `lib/state/*`, `lib/services/matching_service.dart`, `lib/screens/home_shell.dart`, `requests_screen.dart`, `schedule_screen.dart`, `schedule_session_screen.dart`, `lib/widgets/status_badge.dart`, `match_score_ring.dart`, `match_timeline.dart`, `match_detail_sheet.dart`, `lib/utils/actions.dart`, `lib/app.dart`, `README.md`, `test/app_state_test.dart`, `test/matching_service_test.dart`.
-- **Nghiệm thu:** 7 trạng thái lời mời hoạt động đúng; 3 tab lời mời; cảnh báo trùng giờ; `flutter analyze` sạch; 14 test pass; demo đủ 6 nhánh; repo public có hướng dẫn chạy.
+- **Phụ trách:** phân tích yêu cầu, chốt phạm vi; thiết kế kiến trúc và state machine; matching; màn lời mời; màn lịch hẹn và form đặt lịch; **Cài đặt** (ngôn ngữ Việt/Anh, giao diện sáng/tối, màn Nhóm 12); tích hợp toàn bộ sản phẩm; quản lý Git/GitHub; viết README và kịch bản demo.
+- **Đầu việc:** mô hình `Skill`/`User`/`SwapRequest`/`SwapSession`/`Review`; `AppState` + `AppScope`; matching hai chiều; vòng đời accept/reject/expire/reschedule/cancel/complete/review; 3 tab *Nhận được / Đã gửi / Lịch sử*; màn *Lịch hẹn* (2 tab); form đặt lịch (ngày, giờ, thời lượng, hình thức, địa điểm, ghi chú); validate quá khứ 15 phút và trùng lịch; `HomeShell` + timer hết hạn; widget điểm phù hợp; hộp thoại dùng chung; review chéo và sửa lỗi cuối; từ điển `tr()`/`trArgs()` phủ toàn bộ copy; bảng màu `AppPalette.light/dark`; lưu cài đặt bằng `shared_preferences`.
+- **File chính:** `lib/models/*`, `lib/state/*`, `lib/services/matching_service.dart`, `lib/screens/home_shell.dart`, `requests_screen.dart`, `schedule_screen.dart`, `schedule_session_screen.dart`, `settings_screen.dart`, `team_screen.dart`, `lib/widgets/status_badge.dart`, `match_score_ring.dart`, `match_timeline.dart`, `match_detail_sheet.dart`, `lib/utils/actions.dart`, `lib/app.dart`, `lib/l10n/app_text.dart`, `lib/theme/app_theme.dart`, `README.md`, `test/app_state_test.dart`, `test/matching_service_test.dart`, `test/settings_test.dart`.
+- **Nghiệm thu:** 7 trạng thái lời mời hoạt động đúng; 3 tab lời mời; cảnh báo trùng giờ; đổi ngôn ngữ/giao diện áp dụng ngay toàn app và giữ sau khi mở lại; màn Nhóm 12 đúng thông tin; `flutter analyze` sạch; 19 test pass; demo đủ 6 nhánh; repo public có hướng dẫn chạy.
 
 #### Đặng Tuấn Ngọc — 35%
 
@@ -249,9 +266,11 @@ flutter test
 ### 9.3. Tiêu chí nghiệm thu chung
 
 - [x] `flutter analyze` không có issue.
-- [x] `flutter test` pass 14/14.
+- [x] `flutter test` pass 19/19.
 - [x] Chạy được bằng `flutter run -d chrome` và `flutter run -d web-server`.
 - [x] Demo đủ 6 nhánh: từ chối, hết hạn, đổi lịch, huỷ, hoàn thành, đánh giá hai chiều.
+- [x] Đổi ngôn ngữ Việt/Anh và giao diện sáng/tối áp dụng ngay toàn app, lưu sau khi mở lại.
+- [x] Màn Nhóm 12 hiển thị đúng thành viên, vai trò và tỉ lệ đóng góp đã thống nhất.
 - [x] Repo public, không commit `build/`, `.dart_tool/`, `.idea/`.
 - [x] README có phạm vi, tính năng, widget đặc trưng, kịch bản demo, cách chạy và kiểm thử.
 
@@ -280,16 +299,18 @@ flutter test
 **Đã kiểm tra**
 
 - [x] `flutter analyze`: không issue.
-- [x] `flutter test`: 14/14 pass.
+- [x] `flutter test`: 19/19 pass.
 - [x] Sáu nhánh vòng đời: từ chối, hết hạn, đổi lịch, huỷ, hoàn thành, đánh giá hai chiều.
 - [x] Đặt lịch quá khứ và trùng giờ bị chặn.
 - [x] Swipe hai hướng, tìm kiếm/lọc, mở chi tiết, gửi đánh giá.
+- [x] Đổi VI/EN và sáng/tối: copy, ngày giờ, nhãn đánh giá đổi đúng; cài đặt được giữ sau khi khởi động lại.
 - [x] Chạy trên Chrome desktop, không có lỗi console.
 
 **Cần kiểm tra trước khi nộp**
 
 - [ ] Chạy trên Android/iOS thật.
 - [ ] Màn hình 360×800 và text scale 2.0.
+- [ ] Độ tương phản giao diện tối và độ dài câu tiếng Anh trên màn hình nhỏ.
 - [ ] Timer hết hạn khi app xuống background rồi quay lại.
 - [ ] Đối chiếu số liệu Word/PowerPoint với app.
 

@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import '../l10n/app_text.dart';
 
 /// Vòng tròn hiển thị % phù hợp giữa hai sinh viên.
 class MatchScoreRing extends StatelessWidget {
@@ -29,7 +30,7 @@ class MatchScoreRing extends StatelessWidget {
         painter: _RingPainter(
           value: value,
           background: AppColors.border,
-          colors: const [AppColors.primary, AppColors.secondary],
+          colors: [AppColors.primary, AppColors.secondary],
           strokeWidth: size >= 80 ? 7 : 5,
         ),
         child: Center(
@@ -48,7 +49,7 @@ class MatchScoreRing extends StatelessWidget {
               if (showCaption) ...[
                 const SizedBox(height: 2),
                 Text(
-                  caption ?? 'phù hợp',
+                  caption ?? tr('phù hợp'),
                   style: TextStyle(
                     fontSize: size * 0.135,
                     fontWeight: FontWeight.w600,

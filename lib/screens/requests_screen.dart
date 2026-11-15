@@ -12,6 +12,7 @@ import '../widgets/match_detail_sheet.dart';
 import '../widgets/rating_bar.dart';
 import '../widgets/status_badge.dart';
 import '../widgets/user_avatar.dart';
+import '../l10n/app_text.dart';
 
 class RequestsScreen extends StatelessWidget {
   const RequestsScreen({super.key});
@@ -27,12 +28,26 @@ class RequestsScreen extends StatelessWidget {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Yêu cầu ghép đôi'),
+          title: Text(tr('Yêu cầu ghép đôi')),
           bottom: TabBar(
             tabs: [
-              Tab(text: incoming.isEmpty ? 'Nhận được' : 'Nhận được (${incoming.length})'),
-              Tab(text: outgoing.isEmpty ? 'Đã gửi' : 'Đã gửi (${outgoing.length})'),
-              const Tab(text: 'Lịch sử'),
+              Tab(
+                text: incoming.isEmpty
+                    ? tr('Nhận được')
+                    : trArgs(
+                        'Nhận được ({count})',
+                        {'count': '${incoming.length}'},
+                      ),
+              ),
+              Tab(
+                text: outgoing.isEmpty
+                    ? tr('Đã gửi')
+                    : trArgs(
+                        'Đã gửi ({count})',
+                        {'count': '${outgoing.length}'},
+                      ),
+              ),
+              Tab(text: tr('Lịch sử')),
             ],
           ),
         ),
@@ -56,12 +71,12 @@ class _IncomingTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (requests.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.mark_email_read_outlined,
-        title: 'Chưa có lời mời nào',
+        title: tr('Chưa có lời mời nào'),
         message:
-            'Khi có bạn học muốn trao đổi kỹ năng, lời mời sẽ xuất hiện ở đây. '
-            'Bạn có 48 giờ để phản hồi trước khi lời mời hết hạn.',
+            tr('Khi có bạn học muốn trao đổi kỹ năng, lời mời sẽ xuất hiện ở đây. '
+            'Bạn có 48 giờ để phản hồi trước khi lời mời hết hạn.'),
         color: AppColors.info,
       );
     }
@@ -130,7 +145,7 @@ class _IncomingCard extends StatelessWidget {
                                 partner.name,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: const TextStyle(
+                                style: TextStyle(
                                   fontSize: 15.5,
                                   fontWeight: FontWeight.w800,
                                   color: AppColors.ink,
@@ -150,7 +165,7 @@ class _IncomingCard extends StatelessWidget {
                           '${partner.subtitle} · ${timeAgo(request.createdAt, state.now)}',
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 10.5,
                             color: AppColors.muted,
                           ),
@@ -179,7 +194,7 @@ class _IncomingCard extends StatelessWidget {
                   '“${request.message}”',
                   maxLines: 3,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontSize: 11.5,
                     height: 1.5,
                     color: AppColors.muted,
@@ -198,7 +213,7 @@ class _IncomingCard extends StatelessWidget {
                         minimumSize: const Size(0, 42),
                         foregroundColor: AppColors.danger,
                       ),
-                      child: const Text('Từ chối'),
+                      child: Text(tr('Từ chối')),
                     ),
                   ),
                   const SizedBox(width: 8),
@@ -210,7 +225,7 @@ class _IncomingCard extends StatelessWidget {
                         minimumSize: const Size(0, 42),
                       ),
                       icon: const Icon(Icons.check_rounded, size: 17),
-                      label: const Text('Chấp nhận'),
+                      label: Text(tr('Chấp nhận')),
                     ),
                   ),
                 ],
@@ -231,11 +246,11 @@ class _OutgoingTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (requests.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.outbox_rounded,
-        title: 'Chưa gửi lời mời nào',
+        title: tr('Chưa gửi lời mời nào'),
         message:
-            'Hãy sang tab Khám phá, vuốt sang phải hoặc bấm Kết nối để gửi lời mời tới người phù hợp.',
+            tr('Hãy sang tab Khám phá, vuốt sang phải hoặc bấm Kết nối để gửi lời mời tới người phù hợp.'),
         color: AppColors.primary,
       );
     }
@@ -291,19 +306,27 @@ class _OutgoingCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          'Bạn → ${partner.name}',
+                          trArgs(
+                            'Bạn → {name}',
+                            {'name': partner.name},
+                          ),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: const TextStyle(
+                          style: TextStyle(
                             fontSize: 15,
                             fontWeight: FontWeight.w800,
                             color: AppColors.ink,
                           ),
                         ),
                         Text(
-                          'Đã gửi ${timeAgo(request.createdAt, state.now)} · '
-                          '${timeLeft(request.expiresAt, state.now)}',
-                          style: const TextStyle(
+                          trArgs(
+                            'Đã gửi {time} · {left}',
+                            {
+                              'time': timeAgo(request.createdAt, state.now),
+                              'left': timeLeft(request.expiresAt, state.now),
+                            },
+                          ),
+                          style: TextStyle(
                             fontSize: 10.5,
                             color: AppColors.muted,
                           ),
@@ -319,7 +342,7 @@ class _OutgoingCard extends StatelessWidget {
                 '“${request.message}”',
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 11.5,
                   height: 1.5,
                   color: AppColors.muted,
@@ -335,7 +358,7 @@ class _OutgoingCard extends StatelessWidget {
                     style: TextButton.styleFrom(
                       foregroundColor: AppColors.muted,
                     ),
-                    child: const Text('Thu hồi'),
+                    child: Text(tr('Thu hồi')),
                   ),
                   const Spacer(),
                   OutlinedButton.icon(
@@ -346,8 +369,8 @@ class _OutgoingCard extends StatelessWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 12),
                     ),
                     icon: const Icon(Icons.science_outlined, size: 15),
-                    label: const Text(
-                      'Demo: đồng ý',
+                    label: Text(
+                      tr('Demo: đồng ý'),
                       style: TextStyle(fontSize: 11.5),
                     ),
                   ),
@@ -369,11 +392,11 @@ class _HistoryTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (requests.isEmpty) {
-      return const EmptyState(
+      return EmptyState(
         icon: Icons.history_rounded,
-        title: 'Chưa có lịch sử ghép đôi',
+        title: tr('Chưa có lịch sử ghép đôi'),
         message:
-            'Các lời mời đã chấp nhận, từ chối, hết hạn, huỷ hoặc hoàn thành sẽ được lưu ở đây.',
+            tr('Các lời mời đã chấp nhận, từ chối, hết hạn, huỷ hoặc hoàn thành sẽ được lưu ở đây.'),
       );
     }
 
@@ -405,32 +428,49 @@ class _HistoryCard extends StatelessWidget {
     String subtitle;
     switch (status) {
       case SwapStatus.accepted:
-        subtitle = 'Đã ghép đôi · chưa chọn lịch';
+        subtitle = tr('Đã ghép đôi · chưa chọn lịch');
         break;
       case SwapStatus.scheduled:
         subtitle = session != null
             ? '${friendlyDay(session.startTime, state.now)} · '
                 '${formatTime(session.startTime)}'
-            : 'Đã đặt lịch';
+            : tr('Đã đặt lịch');
         break;
       case SwapStatus.completed:
         subtitle = session != null
-            ? 'Hoàn thành ${timeAgo(session.startTime, state.now)}'
-            : 'Đã hoàn thành';
+            ? trArgs(
+                'Hoàn thành {time}',
+                {'time': timeAgo(session.startTime, state.now)},
+              )
+            : tr('Đã hoàn thành');
         break;
       case SwapStatus.rejected:
-        subtitle = 'Đã từ chối ${timeAgo(request.respondedAt ?? request.createdAt, state.now)}';
+        subtitle = trArgs(
+          'Đã từ chối {time}',
+          {
+            'time': timeAgo(
+              request.respondedAt ?? request.createdAt,
+              state.now,
+            ),
+          },
+        );
         break;
       case SwapStatus.expired:
-        subtitle = 'Hết hạn ${timeAgo(request.expiresAt, state.now)}';
+        subtitle = trArgs(
+          'Hết hạn {time}',
+          {'time': timeAgo(request.expiresAt, state.now)},
+        );
         break;
       case SwapStatus.cancelled:
         subtitle = request.cancelReason?.isNotEmpty == true
-            ? 'Lý do: ${request.cancelReason}'
-            : 'Đã huỷ buổi trao đổi';
+            ? trArgs(
+                'Lý do: {reason}',
+                {'reason': request.cancelReason!},
+              )
+            : tr('Đã huỷ buổi trao đổi');
         break;
       case SwapStatus.pending:
-        subtitle = 'Đang chờ phản hồi';
+        subtitle = tr('Đang chờ phản hồi');
         break;
     }
 
@@ -460,7 +500,7 @@ class _HistoryCard extends StatelessWidget {
                             partner.name,
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
+                            style: TextStyle(
                               fontSize: 13.5,
                               fontWeight: FontWeight.w800,
                               color: AppColors.ink,
@@ -475,15 +515,15 @@ class _HistoryCard extends StatelessWidget {
                       subtitle,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: const TextStyle(
+                      style: TextStyle(
                         fontSize: 10.5,
                         color: AppColors.muted,
                       ),
                     ),
                     if (needsReview) ...[
                       const SizedBox(height: 5),
-                      const SoftBadge(
-                        label: 'Chờ bạn đánh giá',
+                      SoftBadge(
+                        label: tr('Chờ bạn đánh giá'),
                         color: AppColors.accent,
                         icon: Icons.star_outline_rounded,
                         compact: true,
@@ -493,7 +533,7 @@ class _HistoryCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 6),
-              const Icon(
+              Icon(
                 Icons.chevron_right_rounded,
                 size: 20,
                 color: AppColors.slate,
@@ -520,7 +560,7 @@ class _MatchLine extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const Icon(
+        Icon(
           Icons.sync_alt_rounded,
           size: 14,
           color: AppColors.primary,
@@ -529,28 +569,28 @@ class _MatchLine extends StatelessWidget {
         Expanded(
           child: Text.rich(
             TextSpan(
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 10.5,
                 height: 1.45,
                 color: AppColors.muted,
               ),
               children: [
-                const TextSpan(text: 'Họ dạy bạn '),
+                TextSpan(text: tr('Họ dạy bạn ')),
                 TextSpan(
                   text: theyTeach.isEmpty
                       ? '—'
                       : theyTeach.take(2).join(', '),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: AppColors.primary,
                   ),
                 ),
-                const TextSpan(text: '  ·  Bạn dạy họ '),
+                TextSpan(text: tr('  ·  Bạn dạy họ ')),
                 TextSpan(
                   text: youTeach.isEmpty
                       ? '—'
                       : youTeach.take(2).join(', '),
-                  style: const TextStyle(
+                  style: TextStyle(
                     fontWeight: FontWeight.w700,
                     color: AppColors.secondary,
                   ),
@@ -589,10 +629,10 @@ class _ExpiryHint extends StatelessWidget {
           Expanded(
             child: Text(
               outgoing
-                  ? 'Lời mời đã gửi sẽ tự động hết hạn sau 48 giờ nếu chưa có phản hồi. '
-                      'Bạn có thể thu hồi bất cứ lúc nào.'
-                  : 'Lời mời nhận được có hiệu lực 48 giờ. Bạn có thể chấp nhận, '
-                      'từ chối hoặc để hết hạn — mọi nhánh đều được lưu vào Lịch sử.',
+                  ? tr('Lời mời đã gửi sẽ tự động hết hạn sau 48 giờ nếu chưa có phản hồi. '
+                      'Bạn có thể thu hồi bất cứ lúc nào.')
+                  : tr('Lời mời nhận được có hiệu lực 48 giờ. Bạn có thể chấp nhận, '
+                      'từ chối hoặc để hết hạn — mọi nhánh đều được lưu vào Lịch sử.'),
               style: const TextStyle(
                 fontSize: 10.5,
                 height: 1.45,

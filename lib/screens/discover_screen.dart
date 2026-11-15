@@ -9,6 +9,7 @@ import '../widgets/empty_state.dart';
 import '../widgets/swap_candidate_card.dart';
 import '../widgets/user_avatar.dart';
 import 'user_detail_screen.dart';
+import '../l10n/app_text.dart';
 
 class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
@@ -72,9 +73,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       ..hideCurrentSnackBar()
       ..showSnackBar(
         SnackBar(
-          content: Text('Đã bỏ qua ${user.name}'),
+          content: Text(
+            trArgs('Đã bỏ qua {name}', {'name': user.name}),
+          ),
           action: SnackBarAction(
-            label: 'Hoàn tác',
+            label: tr('Hoàn tác'),
             textColor: Colors.white,
             onPressed: () => state.unskipUser(user.id),
           ),
@@ -94,7 +97,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       ..showSnackBar(
         SnackBar(
           content: Text(
-            'Đã gửi lời mời tới ${user.name} · chờ phản hồi trong 48 giờ',
+            trArgs(
+              'Đã gửi lời mời tới {name} · chờ phản hồi trong 48 giờ',
+              {'name': user.name},
+            ),
           ),
         ),
       );
@@ -139,10 +145,10 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text('Khám phá'),
+            Text(tr('Khám phá')),
             Text(
               '${greetingFor(state.now)}, ${me.name} 👋',
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 11.5,
                 fontWeight: FontWeight.w500,
                 color: AppColors.muted,
@@ -169,7 +175,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               onChanged: (value) => setState(() => _query = value),
               textInputAction: TextInputAction.search,
               decoration: InputDecoration(
-                hintText: 'Tìm tên, ngành hoặc kỹ năng...',
+                hintText: tr('Tìm tên, ngành hoặc kỹ năng...'),
                 prefixIcon: const Icon(Icons.search_rounded, size: 21),
                 suffixIcon: _query.isEmpty
                     ? null
@@ -188,13 +194,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                 scrollDirection: Axis.horizontal,
                 children: [
                   _FilterChipItem(
-                    label: 'Tất cả',
+                    label: tr('Tất cả'),
                     selected: _filter == 'all',
                     onTap: () => setState(() => _filter = 'all'),
                   ),
                   const SizedBox(width: 7),
                   _FilterChipItem(
-                    label: 'Trao đổi 2 chiều',
+                    label: tr('Trao đổi 2 chiều'),
                     icon: Icons.sync_alt_rounded,
                     selected: _filter == 'mutual',
                     onTap: () => setState(() => _filter = 'mutual'),
@@ -217,22 +223,25 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             Row(
               children: [
                 Text(
-                  '${feed.length} hồ sơ phù hợp',
-                  style: const TextStyle(
+                  trArgs(
+                    '{count} hồ sơ phù hợp',
+                    {'count': '${feed.length}'},
+                  ),
+                  style: TextStyle(
                     fontSize: 12,
                     fontWeight: FontWeight.w700,
                     color: AppColors.ink,
                   ),
                 ),
                 const Spacer(),
-                const Icon(
+                Icon(
                   Icons.auto_awesome_rounded,
                   size: 13,
                   color: AppColors.accent,
                 ),
                 const SizedBox(width: 4),
-                const Text(
-                  'Sắp xếp theo độ phù hợp',
+                Text(
+                  tr('Sắp xếp theo độ phù hợp'),
                   style: TextStyle(
                     fontSize: 10.5,
                     color: AppColors.muted,
@@ -246,14 +255,14 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   ? EmptyState(
                       icon: Icons.explore_off_rounded,
                       title: _query.isNotEmpty || _filter != 'all'
-                          ? 'Không tìm thấy hồ sơ phù hợp'
-                          : 'Bạn đã xem hết hồ sơ rồi!',
+                          ? tr('Không tìm thấy hồ sơ phù hợp')
+                          : tr('Bạn đã xem hết hồ sơ rồi!'),
                       message: _query.isNotEmpty || _filter != 'all'
-                          ? 'Thử xoá bộ lọc hoặc tìm bằng tên kỹ năng khác nhé.'
-                          : 'Các hồ sơ đã bỏ qua sẽ được đưa trở lại nếu bạn muốn xem lại.',
+                          ? tr('Thử xoá bộ lọc hoặc tìm bằng tên kỹ năng khác nhé.')
+                          : tr('Các hồ sơ đã bỏ qua sẽ được đưa trở lại nếu bạn muốn xem lại.'),
                       actionLabel: _query.isNotEmpty || _filter != 'all'
-                          ? 'Xoá bộ lọc'
-                          : 'Xem lại tất cả hồ sơ',
+                          ? tr('Xoá bộ lọc')
+                          : tr('Xem lại tất cả hồ sơ'),
                       onAction: _query.isNotEmpty || _filter != 'all'
                           ? _clearFilters
                           : () => state.resetSkippedUsers(),
@@ -272,7 +281,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                   children: [
                     _ActionButton(
                       icon: Icons.close_rounded,
-                      label: 'Bỏ qua',
+                      label: tr('Bỏ qua'),
                       color: AppColors.danger,
                       background: Colors.white,
                       onTap: () => _skip(feed.first.user),
@@ -280,7 +289,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     const SizedBox(width: 16),
                     _ActionButton(
                       icon: Icons.visibility_outlined,
-                      label: 'Chi tiết',
+                      label: tr('Chi tiết'),
                       color: AppColors.primary,
                       background: Colors.white,
                       small: true,
@@ -289,7 +298,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                     const SizedBox(width: 16),
                     _ActionButton(
                       icon: Icons.handshake_rounded,
-                      label: 'Kết nối',
+                      label: tr('Kết nối'),
                       color: Colors.white,
                       background: AppColors.primary,
                       onTap: () => _connect(feed.first.user),
@@ -399,17 +408,17 @@ class _Deck extends StatelessWidget {
             },
             movementDuration: const Duration(milliseconds: 230),
             resizeDuration: const Duration(milliseconds: 160),
-            background: const _SwipeBackground(
+            background: _SwipeBackground(
               alignment: Alignment.centerLeft,
               color: AppColors.success,
               icon: Icons.handshake_rounded,
-              label: 'Gửi lời mời',
+              label: tr('Gửi lời mời'),
             ),
-            secondaryBackground: const _SwipeBackground(
+            secondaryBackground: _SwipeBackground(
               alignment: Alignment.centerRight,
               color: AppColors.danger,
               icon: Icons.close_rounded,
-              label: 'Bỏ qua',
+              label: tr('Bỏ qua'),
             ),
             onDismissed: (direction) {
               onDecide(

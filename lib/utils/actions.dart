@@ -4,6 +4,7 @@ import '../models/swap_request.dart';
 import '../screens/schedule_session_screen.dart';
 import '../state/app_state.dart';
 import '../widgets/review_sheet.dart';
+import '../l10n/app_text.dart';
 
 void showMessage(BuildContext context, String message) {
   ScaffoldMessenger.of(context)
@@ -21,7 +22,7 @@ Future<void> openSchedule(
     ),
   );
   if (saved == true && context.mounted) {
-    showMessage(context, 'Đã lưu lịch học và thông báo cho đối phương (demo).');
+    showMessage(context, tr('Đã lưu lịch học và thông báo cho đối phương (demo).'));
   }
 }
 
@@ -36,7 +37,7 @@ Future<void> openReview(
     builder: (_) => ReviewSheet(request: request),
   );
   if (submitted == true && context.mounted) {
-    showMessage(context, 'Đánh giá của bạn đã được ghi lại.');
+    showMessage(context, tr('Đánh giá của bạn đã được ghi lại.'));
   }
 }
 
@@ -66,21 +67,23 @@ Future<void> acceptFlow(
           size: 28,
         ),
       ),
-      title: const Text('Đã ghép đôi!'),
+      title: Text(tr('Đã ghép đôi!')),
       content: Text(
-        'Bạn và ${partner.name} đã đồng ý trao đổi kỹ năng. '
-        'Hãy chọn thời gian để buổi học diễn ra thuận lợi nhé.',
+        trArgs(
+          'Bạn và {name} đã đồng ý trao đổi kỹ năng. Hãy chọn thời gian để buổi học diễn ra thuận lợi nhé.',
+          {'name': partner.name},
+        ),
         textAlign: TextAlign.center,
       ),
       actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(false),
-          child: const Text('Để sau'),
+          child: Text(tr('Để sau')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(dialogContext).pop(true),
-          child: const Text('Chọn lịch ngay'),
+          child: Text(tr('Chọn lịch ngay')),
         ),
       ],
     ),
@@ -110,21 +113,23 @@ Future<void> partnerAcceptedFlow(
         size: 36,
         color: Color(0xFF3B82F6),
       ),
-      title: Text('${partner.name} đã đồng ý!'),
-      content: const Text(
-        'Đây là phản hồi mô phỏng cho buổi demo. '
-        'Bạn có thể chọn lịch học ngay bây giờ.',
+      title: Text(
+        trArgs('{name} đã đồng ý!', {'name': partner.name}),
+      ),
+      content: Text(
+        tr('Đây là phản hồi mô phỏng cho buổi demo. '
+        'Bạn có thể chọn lịch học ngay bây giờ.'),
         textAlign: TextAlign.center,
       ),
       actionsAlignment: MainAxisAlignment.center,
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(false),
-          child: const Text('Để sau'),
+          child: Text(tr('Để sau')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(dialogContext).pop(true),
-          child: const Text('Chọn lịch'),
+          child: Text(tr('Chọn lịch')),
         ),
       ],
     ),
@@ -144,20 +149,22 @@ Future<void> rejectFlow(
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (dialogContext) => AlertDialog(
-      title: const Text('Từ chối lời mời?'),
+      title: Text(tr('Từ chối lời mời?')),
       content: Text(
-        'Lời mời của ${partner.name} sẽ chuyển vào mục Lịch sử. '
-        'Bạn vẫn có thể gửi lời mời mới sau này.',
+        trArgs(
+          'Lời mời của {name} sẽ chuyển vào mục Lịch sử. Bạn vẫn có thể gửi lời mời mới sau này.',
+          {'name': partner.name},
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(false),
-          child: const Text('Giữ lại'),
+          child: Text(tr('Giữ lại')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(dialogContext).pop(true),
           style: FilledButton.styleFrom(backgroundColor: const Color(0xFFEF4444)),
-          child: const Text('Từ chối'),
+          child: Text(tr('Từ chối')),
         ),
       ],
     ),
@@ -166,7 +173,10 @@ Future<void> rejectFlow(
   if (confirmed == true) {
     state.respondToRequest(request.id, accept: false);
     if (context.mounted) {
-      showMessage(context, 'Đã từ chối lời mời của ${partner.name}.');
+      showMessage(
+        context,
+        trArgs('Đã từ chối lời mời của {name}.', {'name': partner.name}),
+      );
     }
   }
 }
@@ -176,26 +186,26 @@ Future<void> cancelFlow(
   AppState state,
   SwapRequest request,
 ) async {
-  final controller = TextEditingController(text: 'Bận lịch cá nhân');
+  final controller = TextEditingController(text: tr('Bận lịch cá nhân'));
   final reason = await showDialog<String>(
     context: context,
     builder: (dialogContext) => AlertDialog(
-      title: const Text('Huỷ buổi trao đổi?'),
+      title: Text(tr('Huỷ buổi trao đổi?')),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Đối phương sẽ nhận được thông báo huỷ kèm lý do. '
-            'Bạn có thể gửi lời mời mới sau.',
+          Text(
+            tr('Đối phương sẽ nhận được thông báo huỷ kèm lý do. '
+            'Bạn có thể gửi lời mời mới sau.'),
           ),
           const SizedBox(height: 14),
           TextField(
             controller: controller,
             maxLength: 120,
-            decoration: const InputDecoration(
-              labelText: 'Lý do huỷ',
-              hintText: 'Ví dụ: bận lịch thi giữa kỳ',
+            decoration: InputDecoration(
+              labelText: tr('Lý do huỷ'),
+              hintText: tr('Ví dụ: bận lịch thi giữa kỳ'),
             ),
           ),
         ],
@@ -203,16 +213,19 @@ Future<void> cancelFlow(
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(),
-          child: const Text('Giữ lịch'),
+          child: Text(tr('Giữ lịch')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(dialogContext).pop(
             controller.text.trim().isEmpty
-                ? 'Đã huỷ bởi ${state.currentUser?.name ?? 'sinh viên'}'
+                ? trArgs(
+                    'Đã huỷ bởi {name}',
+                    {'name': state.currentUser?.name ?? tr('sinh viên')},
+                  )
                 : controller.text.trim(),
           ),
           style: FilledButton.styleFrom(backgroundColor: const Color(0xFFEF4444)),
-          child: const Text('Xác nhận huỷ'),
+          child: Text(tr('Xác nhận huỷ')),
         ),
       ],
     ),
@@ -222,7 +235,7 @@ Future<void> cancelFlow(
   if (reason != null) {
     state.cancelMatch(request.id, reason: reason);
     if (context.mounted) {
-      showMessage(context, 'Đã huỷ buổi trao đổi.');
+      showMessage(context, tr('Đã huỷ buổi trao đổi.'));
     }
   }
 }
@@ -236,19 +249,21 @@ Future<void> completeFlow(
   final confirmed = await showDialog<bool>(
     context: context,
     builder: (dialogContext) => AlertDialog(
-      title: const Text('Kết thúc buổi học?'),
+      title: Text(tr('Kết thúc buổi học?')),
       content: Text(
-        'Xác nhận buổi học với ${partner.name} đã diễn ra. '
-        'Sau đó cả hai có thể đánh giá nhau (demo).',
+        trArgs(
+          'Xác nhận buổi học với {name} đã diễn ra. Sau đó cả hai có thể đánh giá nhau (demo).',
+          {'name': partner.name},
+        ),
       ),
       actions: [
         TextButton(
           onPressed: () => Navigator.of(dialogContext).pop(false),
-          child: const Text('Chưa kết thúc'),
+          child: Text(tr('Chưa kết thúc')),
         ),
         FilledButton(
           onPressed: () => Navigator.of(dialogContext).pop(true),
-          child: const Text('Đã hoàn thành'),
+          child: Text(tr('Đã hoàn thành')),
         ),
       ],
     ),
@@ -260,7 +275,10 @@ Future<void> completeFlow(
     final updated = state.requestById(request.id);
     showMessage(
       context,
-      'Buổi học đã hoàn thành · ${partner.name} cũng đã gửi đánh giá.',
+      trArgs(
+        'Buổi học đã hoàn thành · {name} cũng đã gửi đánh giá.',
+        {'name': partner.name},
+      ),
     );
     if (updated != null) {
       await openReview(context, updated);

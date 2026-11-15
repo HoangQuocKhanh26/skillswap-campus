@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import '../models/user.dart';
+import '../l10n/app_text.dart';
 
 /// Kết quả ghép cặp kèm giải thích vì sao hai người phù hợp.
 class MatchingResult {
@@ -34,23 +35,41 @@ class MatchingResult {
   }
 
   String get label {
-    if (percent >= 85) return 'Rất phù hợp';
-    if (percent >= 60) return 'Phù hợp';
-    if (percent >= 35) return 'Có tiềm năng';
-    return 'Gợi ý mở rộng';
+    if (percent >= 85) return tr('Rất phù hợp');
+    if (percent >= 60) return tr('Phù hợp');
+    if (percent >= 35) return tr('Có tiềm năng');
+    return tr('Gợi ý mở rộng');
   }
 
   String get reason {
     if (isMutual && theyTeachYou.isNotEmpty) {
-      return 'Trao đổi hai chiều: ${theyTeachYou.first} ↔ ${youTeachThem.first}';
+      return trArgs(
+        'Trao đổi hai chiều: {a} ↔ {b}',
+        {
+          'a': theyTeachYou.first,
+          'b': youTeachThem.first,
+        },
+      );
     }
     if (theyTeachYou.isNotEmpty) {
-      return '${user.name.split(' ').last} có thể dạy bạn ${theyTeachYou.first}';
+      return trArgs(
+        '{name} có thể dạy bạn {skill}',
+        {
+          'name': user.name.split(' ').last,
+          'skill': theyTeachYou.first,
+        },
+      );
     }
     if (youTeachThem.isNotEmpty) {
-      return '${user.name.split(' ').last} muốn học ${youTeachThem.first} từ bạn';
+      return trArgs(
+        '{name} muốn học {skill} từ bạn',
+        {
+          'name': user.name.split(' ').last,
+          'skill': youTeachThem.first,
+        },
+      );
     }
-    return 'Cùng quan tâm đến kỹ năng trong lớp';
+    return tr('Cùng quan tâm đến kỹ năng trong lớp');
   }
 }
 

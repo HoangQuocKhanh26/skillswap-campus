@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../theme/app_theme.dart';
+import '../l10n/app_text.dart';
 
 /// Hiển thị điểm đánh giá dạng sao (chỉ đọc).
 class RatingStars extends StatelessWidget {
@@ -8,7 +9,7 @@ class RatingStars extends StatelessWidget {
   final double size;
   final bool showValue;
   final int? reviewCount;
-  final Color color;
+  final Color? color;
 
   const RatingStars({
     super.key,
@@ -16,11 +17,12 @@ class RatingStars extends StatelessWidget {
     this.size = 15,
     this.showValue = true,
     this.reviewCount,
-    this.color = AppColors.accent,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
+    final tone = color ?? AppColors.accent;
     final rounded = (rating * 2).round() / 2;
     final full = rounded.floor();
     final hasHalf = rounded - full >= 0.5;
@@ -39,7 +41,7 @@ class RatingStars extends StatelessWidget {
                       : Icons.star_outline_rounded),
               size: size,
               color: index < full || (index == full && hasHalf)
-                  ? color
+                  ? tone
                   : AppColors.border,
             ),
           ),
@@ -83,13 +85,13 @@ class RatingBar extends StatefulWidget {
     this.activeLabel,
   });
 
-  static const List<String> labels = [
-    'Chưa hài lòng',
-    'Cần cải thiện',
-    'Bình thường',
-    'Tốt',
-    'Tuyệt vời',
-  ];
+  static List<String> get labels => [
+        tr('Chưa hài lòng'),
+        tr('Cần cải thiện'),
+        tr('Bình thường'),
+        tr('Tốt'),
+        tr('Tuyệt vời'),
+      ];
 
   @override
   State<RatingBar> createState() => _RatingBarState();
@@ -103,7 +105,7 @@ class _RatingBarState extends State<RatingBar> {
     final display = _hovered ?? widget.rating;
     final label = display > 0
         ? (widget.activeLabel ?? RatingBar.labels[display - 1])
-        : 'Chạm để chọn số sao';
+        : tr('Chạm để chọn số sao');
 
     return Column(
       mainAxisSize: MainAxisSize.min,

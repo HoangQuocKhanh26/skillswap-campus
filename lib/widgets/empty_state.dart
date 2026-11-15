@@ -8,7 +8,7 @@ class EmptyState extends StatelessWidget {
   final String message;
   final String? actionLabel;
   final VoidCallback? onAction;
-  final Color color;
+  final Color? color;
 
   const EmptyState({
     super.key,
@@ -17,11 +17,12 @@ class EmptyState extends StatelessWidget {
     required this.message,
     this.actionLabel,
     this.onAction,
-    this.color = AppColors.primary,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
+    final tone = color ?? AppColors.primary;
     return Center(
       child: SingleChildScrollView(
         padding: const EdgeInsets.all(32),
@@ -32,15 +33,15 @@ class EmptyState extends StatelessWidget {
               width: 88,
               height: 88,
               decoration: BoxDecoration(
-                color: color.withValues(alpha: 0.09),
+                color: tone.withValues(alpha: 0.09),
                 shape: BoxShape.circle,
               ),
-              child: Icon(icon, size: 40, color: color),
+              child: Icon(icon, size: 40, color: tone),
             ),
             const SizedBox(height: 20),
             Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.w800,
                 color: AppColors.ink,
@@ -51,7 +52,7 @@ class EmptyState extends StatelessWidget {
             Text(
               message,
               textAlign: TextAlign.center,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 13.5,
                 height: 1.5,
                 color: AppColors.muted,
@@ -94,7 +95,7 @@ class SectionTitle extends StatelessWidget {
           Expanded(
             child: Text(
               title,
-              style: const TextStyle(
+              style: TextStyle(
                 fontSize: 16.5,
                 fontWeight: FontWeight.w800,
                 color: AppColors.ink,
@@ -107,7 +108,7 @@ class SectionTitle extends StatelessWidget {
               onTap: onAction,
               child: Text(
                 actionLabel!,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 13,
                   fontWeight: FontWeight.w700,
                   color: AppColors.primary,
@@ -125,25 +126,26 @@ class StatTile extends StatelessWidget {
   final String value;
   final String label;
   final IconData icon;
-  final Color color;
+  final Color? color;
 
   const StatTile({
     super.key,
     required this.value,
     required this.label,
     required this.icon,
-    this.color = AppColors.primary,
+    this.color,
   });
 
   @override
   Widget build(BuildContext context) {
+    final tone = color ?? AppColors.primary;
     return Column(
       children: [
-        Icon(icon, size: 18, color: color),
+        Icon(icon, size: 18, color: tone),
         const SizedBox(height: 5),
         Text(
           value,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 17,
             fontWeight: FontWeight.w800,
             color: AppColors.ink,
@@ -153,7 +155,7 @@ class StatTile extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 10.5,
             fontWeight: FontWeight.w600,
             color: AppColors.muted,

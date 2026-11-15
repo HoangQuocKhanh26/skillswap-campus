@@ -7,14 +7,24 @@ import 'state/app_state.dart';
 import 'theme/app_theme.dart';
 
 class SkillSwapApp extends StatefulWidget {
-  const SkillSwapApp({super.key});
+  final String initialLanguage;
+  final bool initialDark;
+
+  const SkillSwapApp({
+    super.key,
+    this.initialLanguage = 'vi',
+    this.initialDark = false,
+  });
 
   @override
   State<SkillSwapApp> createState() => _SkillSwapAppState();
 }
 
 class _SkillSwapAppState extends State<SkillSwapApp> {
-  late final AppState _state = AppState();
+  late final AppState _state = AppState(
+    languageCode: widget.initialLanguage,
+    isDark: widget.initialDark,
+  );
 
   @override
   void dispose() {
@@ -26,21 +36,28 @@ class _SkillSwapAppState extends State<SkillSwapApp> {
   Widget build(BuildContext context) {
     return AppScope(
       state: _state,
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'SkillSwap Campus',
-        theme: AppTheme.light(),
-        locale: const Locale('vi'),
-        supportedLocales: const [
-          Locale('vi'),
-          Locale('en'),
-        ],
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        home: const LoginScreen(),
+      child: ListenableBuilder(
+        listenable: _state,
+        builder: (context, _) {
+          return MaterialApp(
+            debugShowCheckedModeBanner: false,
+            title: 'SkillSwap Campus',
+            theme: AppTheme.light(),
+            darkTheme: AppTheme.dark(),
+            themeMode: _state.isDark ? ThemeMode.dark : ThemeMode.light,
+            locale: Locale(_state.languageCode),
+            supportedLocales: const [
+              Locale('vi'),
+              Locale('en'),
+            ],
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            home: const LoginScreen(),
+          );
+        },
       ),
     );
   }
